@@ -10,18 +10,25 @@
 #
 
 CMAKE_BUILD_DIRECTORY=build/
-PROGRAM_EXECUTABLE_PATH=build/dist/bin/ogrecity
+PROGRAM_EXECUTABLE_DIRECTORY=build/dist/bin/
+EXECUTABLE_NAME=city3d
 DOCUMENTATION_DIRECTORY=doc/
 
-.PHONY: clean doc all run
+.PHONY: clean doc all build run
 
-all:
-	cd ${CMAKE_BUILD_DIRECTORY} && cmake ../src
+all: build
 	cd ${CMAKE_BUILD_DIRECTORY} && make -B && make install
+
+build:
+	mkdir -p ${CMAKE_BUILD_DIRECTORY}
+	cd ${CMAKE_BUILD_DIRECTORY} && cmake ../src
 
 doc:
 	mkdir -p ${DOCUMENTATION_DIRECTORY}
 	doxygen Doxyfile
 
 clean:
-	cd ${CMAKE_BUILD_DIRECTORY} && rm -rf
+	rm -rf ${CMAKE_BUILD_DIRECTORY} ${DOCUMENTATION_DIRECTORY}
+
+run:
+	export LD_LIBRARY_PATH=../../../../libcity/ && cd ${PROGRAM_EXECUTABLE_DIRECTORY} && ./${EXECUTABLE_NAME}
