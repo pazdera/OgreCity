@@ -1,6 +1,15 @@
+/**
+ * This code is part of OgreCity.
+ *
+ * @file baseapplication.h
+ * @date 22.04.2011
+ * @author OgreWiki
+ *
+ * @see baseapplication.h
+ *
+ */
+
 /*
------------------------------------------------------------------------------
-Filename:    BaseApplication.cpp
 -----------------------------------------------------------------------------
 
 This source file is part of the

@@ -7,7 +7,7 @@
 #*/
 cmake_minimum_required(VERSION 2.6)
 
-project(city3d)
+project(OgreCity)
 
 if(WIN32)
         set(CMAKE_MODULE_PATH "$ENV{OGRE_HOME}/CMake/;${CMAKE_MODULE_PATH}")
@@ -98,14 +98,14 @@ set(HDRS
         ./ogrecity.h
         ./terraingenerator.h
         ./baseapplication.h
-        ./city3d.h
+        ./application.h
 )
 
 set(SRCS
         ./ogrecity.cpp
         ./terraingenerator.cpp
         ./baseapplication.cpp
-        ./city3d.cpp
+        ./application.cpp
         ./main.cpp
 )
 
@@ -117,22 +117,22 @@ include_directories( ${OIS_INCLUDE_DIRS}
 
 link_directories(${LIBCIY_LINK_DIR})
 
-add_executable(city3d WIN32 ${HDRS} ${SRCS})
+add_executable(ogrecity WIN32 ${HDRS} ${SRCS})
 
-set_target_properties(city3d PROPERTIES DEBUG_POSTFIX _d)
+set_target_properties(ogrecity PROPERTIES DEBUG_POSTFIX _d)
 
 message(${OGRE_SAMPLES_INCLUDEPATH})
 
-target_link_libraries(city3d ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${LIBCIY_LIB})
+target_link_libraries(ogrecity ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${LIBCIY_LIB})
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/bin)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/media)
 
 # post-build copy for win32
 if(WIN32 AND NOT MINGW)
-        add_custom_command( TARGET city3d PRE_BUILD
+        add_custom_command( TARGET ogrecity PRE_BUILD
                 COMMAND if not exist .\\dist\\bin mkdir .\\dist\\bin )
-        add_custom_command( TARGET city3d POST_BUILD
+        add_custom_command( TARGET ogrecity POST_BUILD
                 COMMAND copy \"$(TargetPath)\" .\\dist\\bin )
 endif(WIN32 AND NOT MINGW)
 
@@ -142,7 +142,7 @@ endif(MINGW OR UNIX)
 
 if(WIN32)
 
-        install(TARGETS city3d
+        install(TARGETS ogrecity
                 RUNTIME DESTINATION bin
                 CONFIGURATIONS All)
 
@@ -198,7 +198,7 @@ endif(WIN32)
 
 if(UNIX)
 
-        install(TARGETS city3d
+        install(TARGETS ogrecity
                 RUNTIME DESTINATION bin
                 CONFIGURATIONS All)
 

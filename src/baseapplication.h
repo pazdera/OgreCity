@@ -1,19 +1,29 @@
+/**
+ * This code is part of OgreCity.
+ *
+ * @file baseapplication.h
+ * @date 22.04.2011
+ * @author OgreWiki
+ *
+ * This file is entirely taken from the OgreWiki tutorial framework.
+ *
+ */
+
 /*
------------------------------------------------------------------------------
-Filename:    BaseApplication.h
 -----------------------------------------------------------------------------
 
 This source file is part of the
-   ___                 __    __ _ _    _ 
+   ___                 __    __ _ _    _
   /___\__ _ _ __ ___  / / /\ \ (_) | _(_)
  //  // _` | '__/ _ \ \ \/  \/ / | |/ / |
 / \_// (_| | | |  __/  \  /\  /| |   <| |
 \___/ \__, |_|  \___|   \/  \/ |_|_|\_\_|
-      |___/                              
+      |___/
       Tutorial Framework
       http://www.ogre3d.org/tikiwiki/
 -----------------------------------------------------------------------------
 */
+
 #ifndef _baseapplication_h_
 #define _baseapplication_h_
 

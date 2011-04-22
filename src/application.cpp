@@ -1,26 +1,34 @@
-/*
-*/
+/**
+ * This code is part of OgreCity.
+ *
+ * @file application.h
+ * @date 22.04.2011
+ * @author Radek Pazdera (xpazde00@stud.fit.vutbr.cz)
+ *
+ * @see application.h
+ *
+ */
 
-#include "city3d.h"
+#include "application.h"
 #include "ogrecity.h"
 
-//-------------------------------------------------------------------------------------
-City3D::City3D(void)
+
+Application::Application(void)
   :  mInfoLabel(0)
 {
   terrain = 0;
 }
-//-------------------------------------------------------------------------------------
-City3D::~City3D(void)
+
+Application::~Application(void)
 {
   if (terrain != 0) delete terrain;
 }
-//-------------------------------------------------------------------------------------
-void City3D::destroyScene(void)
+
+void Application::destroyScene(void)
 {
 }
 
-void City3D::createScene(void)
+void Application::createScene(void)
 {
   setupCamera();
   setupTextureFiltering();
@@ -67,7 +75,7 @@ void City3D::createScene(void)
 
 }
 
-void City3D::setupCamera()
+void Application::setupCamera()
 {
   mCamera->setPosition(Ogre::Vector3(100, 100, 100));
   mCamera->lookAt(Ogre::Vector3(0, 0, 0));
@@ -80,14 +88,14 @@ void City3D::setupCamera()
   }
 }
 
-void City3D::setupTextureFiltering()
+void Application::setupTextureFiltering()
 {
   // Note: Pressing T on runtime will discarde those settings
   Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TFO_ANISOTROPIC);
   Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(7);
 }
 
-void City3D::drawFog()
+void Application::drawFog()
 {
   //Ogre::ColourValue fadeColour(0.9, 0.9, 0.9);
   //mSceneMgr->setFog(Ogre::FOG_LINEAR, fadeColour, 0.0, 10, 1200);
@@ -99,7 +107,7 @@ void City3D::drawFog()
 }
 
 
-void City3D::createFrameListener(void)
+void Application::createFrameListener(void)
 {
   BaseApplication::createFrameListener();
 
@@ -107,7 +115,7 @@ void City3D::createFrameListener(void)
 }
 
 
-bool City3D::frameRenderingQueued(const Ogre::FrameEvent& evt)
+bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
   bool ret = BaseApplication::frameRenderingQueued(evt);
 
@@ -129,7 +137,7 @@ bool City3D::frameRenderingQueued(const Ogre::FrameEvent& evt)
   return ret;
 }
 
-bool City3D::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+bool Application::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
 
 
