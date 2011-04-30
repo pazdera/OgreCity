@@ -42,19 +42,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "baseapplication.h"
 
 #include <libcity.h>
-#include "terraingenerator.h"
+
+class EnvironmentRenderer;
+class OgreCity;
+
 
 class Application : public BaseApplication
 {
-  private:
-    OgreBites::Label* mInfoLabel;
-
-    TerrainGenerator* terrain;
-
-    void setupCamera();
-    void setupTextureFiltering();
-    void drawFog();
-
   public:
     Application(void);
     virtual ~Application(void);
@@ -66,6 +60,15 @@ class Application : public BaseApplication
     virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 
     virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+
+  private:
+    OgreBites::Label* mInfoLabel;
+
+    EnvironmentRenderer* environment;
+    OgreCity* city;
+
+    void setupCamera();
+    void setupTextureFiltering();
 };
 
 #endif

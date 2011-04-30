@@ -1,3 +1,38 @@
+material 3WayIntersection
+{
+   technique
+   {
+      pass
+      {
+         texture_unit
+         {
+            texture 3way.png
+            filtering none
+            //filtering anisotropic anisotropic linear
+            //max_anisotropy 1000
+         }
+      }
+   }
+}
+
+material 4WayIntersection
+{
+   technique
+   {
+      pass
+      {
+         texture_unit
+         {
+            texture 4way.png
+            filtering none
+            //filtering anisotropic anisotropic linear
+            //max_anisotropy 1000
+         }
+      }
+   }
+}
+
+
 material DrivingSim/RoadMat
 {
    technique
@@ -7,8 +42,9 @@ material DrivingSim/RoadMat
          texture_unit
          {
             texture road.gif
+            filtering none
             //filtering anisotropic anisotropic linear
-            //max_anisotropy 100
+            //max_anisotropy 1000
          }
       }
    }

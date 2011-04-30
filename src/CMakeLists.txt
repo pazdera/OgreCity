@@ -96,17 +96,23 @@ set(LIBCIY_LIB city)
 
 set(HDRS
         ./ogrecity.h
-        ./terraingenerator.h
         ./baseapplication.h
         ./application.h
+        ./renderer.h
+        ./environmentrenderer.h
+        ./terrainrenderer.h
+        ./streetgraphrenderer.h
 )
 
 set(SRCS
         ./ogrecity.cpp
-        ./terraingenerator.cpp
         ./baseapplication.cpp
         ./application.cpp
         ./main.cpp
+        ./renderer.cpp
+        ./environmentrenderer.cpp
+        ./terrainrenderer.cpp
+        ./streetgraphrenderer.cpp
 )
 
 include_directories( ${OIS_INCLUDE_DIRS}

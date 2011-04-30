@@ -12,16 +12,16 @@
 #include "application.h"
 #include "ogrecity.h"
 
+#include "environmentrenderer.h"
+#include "terrainrenderer.h"
+
 
 Application::Application(void)
   :  mInfoLabel(0)
-{
-  terrain = 0;
-}
+{}
 
 Application::~Application(void)
 {
-  if (terrain != 0) delete terrain;
 }
 
 void Application::destroyScene(void)
@@ -33,29 +33,14 @@ void Application::createScene(void)
   setupCamera();
   setupTextureFiltering();
 
-  /* Setup scene lighting */
-  Ogre::Vector3 lightDirection(0.55, -0.3, 0.75);
-  lightDirection.normalise();
+  /* Render environment */
+  environment = new EnvironmentRenderer(mSceneMgr);
+  environment->render();
 
-  Ogre::Light* light = mSceneMgr->createLight("sunLight");
-  light->setType(Ogre::Light::LT_DIRECTIONAL);
-  light->setDirection(lightDirection);
-  light->setDiffuseColour(Ogre::ColourValue::White);
-  light->setSpecularColour(Ogre::ColourValue(0.2, 0.2, 0.2));
-
-  mSceneMgr->setAmbientLight(Ogre::ColourValue(0.6, 0.6, 0.6));
-
-  /* Draw terrain */
-  terrain = new TerrainGenerator(mSceneMgr, light);
-  terrain->draw();
-
-//  Ogre::Material* terrainMat = terrain->getTerrainObject()->getMaterial().get();
-//  terrainMat->setDepthWriteEnabled(false);
-
-  /* Draw sky */
-  mSceneMgr->setSkyDome(true, "Sky/CloudySky", 5, 8, 500);
-
-  drawFog();
+  /* Render city */
+  city = new OgreCity(mSceneMgr);
+  city->setTerrain(environment->getTerrain());
+  city->render();
 
   /* Add a custom ogre :-) */
   Ogre::Entity* ogre = mSceneMgr->createEntity("Ogre", "ogrehead.mesh");
@@ -68,11 +53,6 @@ void Application::createScene(void)
 //  ogreNode2->attachObject(ogre2);
 //  ogreNode2->translate(Ogre::Vector3(100, 0, 0));
 //  ogreNode2->yaw(Ogre::Degree(-30));
-
-  OgreCity* city = new OgreCity(mSceneMgr, terrain->getTerrainObject());
-  city->generate();
-  city->draw();
-
 }
 
 void Application::setupCamera()
@@ -95,16 +75,6 @@ void Application::setupTextureFiltering()
   Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(7);
 }
 
-void Application::drawFog()
-{
-  //Ogre::ColourValue fadeColour(0.9, 0.9, 0.9);
-  //mSceneMgr->setFog(Ogre::FOG_LINEAR, fadeColour, 0.0, 10, 1200);
-  //mWindow->getViewport(0)->setBackgroundColour(fadeColour);
-
-  //Ogre::Plane plane;
-  //plane.d = 100;
-  //plane.normal = Ogre::Vector3::NEGATIVE_UNIT_Y;
-}
 
 
 void Application::createFrameListener(void)
@@ -118,6 +88,8 @@ void Application::createFrameListener(void)
 bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
   bool ret = BaseApplication::frameRenderingQueued(evt);
+
+  TerrainRenderer* terrain = environment->getTerrain();
 
   if (terrain->loadingInProgress())
   {
@@ -139,7 +111,5 @@ bool Application::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 bool Application::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
-
-
   return BaseApplication::mousePressed(arg, id);
 }

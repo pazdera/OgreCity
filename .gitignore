@@ -2,3 +2,6 @@
 *.so
 *.o
 *~
+doc/
+build/
+qtcreator-build/

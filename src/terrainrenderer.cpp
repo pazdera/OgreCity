@@ -1,19 +1,35 @@
-#include "terraingenerator.h"
+/**
+ * This code is part of OgreCity.
+ *
+ * @file terrainrenderer.cpp
+ * @date 22.04.2011
+ * @author Radek Pazdera (xpazde00@stud.fit.vutbr.cz)
+ *
+ * @see terrainrenderer.h
+ *
+ */
 
-TerrainGenerator::TerrainGenerator(Ogre::SceneManager* sceneManagerObject, Ogre::Light* lighting)
-  :mTerrainGlobals(0), mTerrainGroup(0), terrainsImported(false), sceneManager(sceneManagerObject), light(lighting)
+#include "terrainrenderer.h"
+
+TerrainRenderer::TerrainRenderer(Ogre::SceneManager* sceneManagerObject)
+  :mTerrainGlobals(0), mTerrainGroup(0), terrainsImported(false), sceneManager(sceneManagerObject), light(0), Renderer(sceneManagerObject)
 {
 }
 
-TerrainGenerator::~TerrainGenerator()
+TerrainRenderer::~TerrainRenderer()
 {
   if (mTerrainGroup != 0) OGRE_DELETE mTerrainGroup;
   if (mTerrainGlobals != 0) OGRE_DELETE mTerrainGlobals;
 }
 
-void TerrainGenerator::getTerrainImage(bool flipX, bool flipY, Ogre::Image& img)
+void TerrainRenderer::setLightingConditions(Ogre::Light* lighting)
 {
-  // FIXME
+  light = lighting;
+}
+
+void TerrainRenderer::getTerrainImage(bool flipX, bool flipY, Ogre::Image& img)
+{
+  /** @todo Use a different lightmap. */
   img.load("terrain.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
   if (flipX)
@@ -26,7 +42,7 @@ void TerrainGenerator::getTerrainImage(bool flipX, bool flipY, Ogre::Image& img)
   }
 }
 
-void TerrainGenerator::defineTerrain(long x, long y)
+void TerrainRenderer::defineTerrain(long x, long y)
 {
   Ogre::String filename = mTerrainGroup->generateFilename(x, y);
   if (Ogre::ResourceGroupManager::getSingleton().resourceExists(mTerrainGroup->getResourceGroup(), filename))
@@ -43,7 +59,7 @@ void TerrainGenerator::defineTerrain(long x, long y)
   }
 }
 
-void TerrainGenerator::initBlendMaps(Ogre::Terrain* terrain)
+void TerrainRenderer::initBlendMaps(Ogre::Terrain* terrain)
 {
 //     Ogre::TerrainLayerBlendMap* blendMap0 = terrain->getLayerBlendMap(1);
 //     Ogre::TerrainLayerBlendMap* blendMap1 = terrain->getLayerBlendMap(2);
@@ -74,7 +90,7 @@ void TerrainGenerator::initBlendMaps(Ogre::Terrain* terrain)
 //     blendMap1->update();
 }
 
-void TerrainGenerator::configureTerrainDefaults(Ogre::Light* light, Ogre::ColourValue ambientLight)
+void TerrainRenderer::configureTerrainDefaults(Ogre::Light* light, Ogre::ColourValue ambientLight)
 {
   // Configure global
   mTerrainGlobals->setMaxPixelError(8);
@@ -109,7 +125,7 @@ void TerrainGenerator::configureTerrainDefaults(Ogre::Light* light, Ogre::Colour
 //  defaultimp.layerList[2].textureNames.push_back("growth_weirdfungus-03_normalheight.dds");
 }
 
-void TerrainGenerator::draw()
+void TerrainRenderer::render()
 {
   mTerrainGlobals = OGRE_NEW Ogre::TerrainGlobalOptions();
   mTerrainGroup = OGRE_NEW Ogre::TerrainGroup(sceneManager, Ogre::Terrain::ALIGN_X_Z, 513, 12000.0f);
@@ -130,23 +146,23 @@ void TerrainGenerator::draw()
 
   if (terrainsImported)
   {
-      Ogre::TerrainGroup::TerrainIterator ti = mTerrainGroup->getTerrainIterator();
-      while(ti.hasMoreElements())
-      {
-          Ogre::Terrain* t = ti.getNext()->instance;
-          initBlendMaps(t);
-      }
+    Ogre::TerrainGroup::TerrainIterator ti = mTerrainGroup->getTerrainIterator();
+    while(ti.hasMoreElements())
+    {
+      Ogre::Terrain* t = ti.getNext()->instance;
+      initBlendMaps(t);
+    }
   }
 
   mTerrainGroup->freeTemporaryResources();
 }
 
-bool TerrainGenerator::loadingInProgress()
+bool TerrainRenderer::loadingInProgress()
 {
   return mTerrainGroup->isDerivedDataUpdateInProgress();
 }
 
-Ogre::String TerrainGenerator::getStatus()
+Ogre::String TerrainRenderer::getStatus()
 {
   if (loadingInProgress())
   {
@@ -165,7 +181,7 @@ Ogre::String TerrainGenerator::getStatus()
   }
 }
 
-void TerrainGenerator::save()
+void TerrainRenderer::save()
 {
   if (terrainsImported)
   {
@@ -174,7 +190,7 @@ void TerrainGenerator::save()
   }
 }
 
-Ogre::Terrain* TerrainGenerator::getTerrainObject()
+Ogre::Terrain* TerrainRenderer::getTerrainObject()
 {
   Ogre::TerrainGroup::TerrainIterator ti = mTerrainGroup->getTerrainIterator();
   while(ti.hasMoreElements())

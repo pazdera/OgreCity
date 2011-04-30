@@ -1,15 +1,31 @@
-#ifndef TERRAINGENERATOR_H
-#define TERRAINGENERATOR_H
+/**
+ * This code is part of OgreCity.
+ *
+ * @file terrainrenderer.h
+ * @date 22.04.2011
+ * @author Radek Pazdera (xpazde00@stud.fit.vutbr.cz)
+ *
+ * This renderer is responsible for displaying terrain.
+ * Terrain generation in this project is based on a
+ * tutorial from OgreWiki (http://www.ogre3d.org/tikiwiki/).
+ *
+ */
 
+#ifndef _TERRAINRENDERER_H_
+#define _TERRAINRENDERER_H_
+
+#include "renderer.h"
 
 #include <Terrain/OgreTerrain.h>
 #include <Terrain/OgreTerrainGroup.h>
 
-class TerrainGenerator
+class TerrainRenderer : public Renderer
 {
   public:
-    TerrainGenerator(Ogre::SceneManager* sceneManagerObject, Ogre::Light* lighting);
-    ~TerrainGenerator();
+    TerrainRenderer(Ogre::SceneManager* sceneManagerObject);
+    ~TerrainRenderer();
+
+    void setLightingConditions(Ogre::Light* lighting);
 
     bool loadingInProgress();
     Ogre::String getStatus();
@@ -17,7 +33,7 @@ class TerrainGenerator
 
     Ogre::Terrain* getTerrainObject();
 
-    void draw();
+    void render();
 
   private:
     void defineTerrain(long x, long y);
@@ -34,4 +50,4 @@ class TerrainGenerator
     Ogre::Light* light;
 };
 
-#endif // TERRAINGENERATOR_H
+#endif // _TERRAINRENDERER_H_

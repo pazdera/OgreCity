@@ -1,4 +1,15 @@
-/**/
+/**
+ * This code is part of OgreCity.
+ *
+ * @file main.cp
+ * @date 22.04.2011
+ * @author Radek Pazdera (xpazde00@stud.fit.vutbr.cz)
+ *
+ * Basic main program that runs Application.
+ *
+ * @see application.h
+ *
+ */
 
 #include "application.h"
 
