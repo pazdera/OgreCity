@@ -57,7 +57,7 @@ class OgreCity : public City, public Renderer
       primaryRoad.height = 1;
       primaryRoad.width = 30;
 
-      primaryRoad.material = "DrivingSim/RoadMat";
+      primaryRoad.material = "Road";
 
 
       // Texture mapping on vertices: 0, 0.03125, 0.5, 1-0.03125, 1
@@ -78,7 +78,7 @@ class OgreCity : public City, public Renderer
       secondaryRoad.height = 1;
       secondaryRoad.width = 15;
 
-      secondaryRoad.material = "DrivingSim/RoadMat";
+      secondaryRoad.material = "Road";
 
       secondaryRoad.verticesTextureMapping = primaryRoad.verticesTextureMapping; // Same as primary road
       secondaryRoad.verticesPositionOffset = primaryRoad.verticesPositionOffset;

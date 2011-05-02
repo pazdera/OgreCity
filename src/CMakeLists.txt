@@ -102,6 +102,7 @@ set(HDRS
         ./environmentrenderer.h
         ./terrainrenderer.h
         ./streetgraphrenderer.h
+        ./skyscraper.h
 )
 
 set(SRCS
@@ -113,6 +114,7 @@ set(SRCS
         ./environmentrenderer.cpp
         ./terrainrenderer.cpp
         ./streetgraphrenderer.cpp
+        ./skyscraper.cpp
 )
 
 include_directories( ${OIS_INCLUDE_DIRS}

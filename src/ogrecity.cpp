@@ -93,7 +93,7 @@ void OgreCity::createSecondaryRoadNetwork()
 
 void OgreCity::createBlocks()
 {
-  std::map<Road::Types, double> roadWidths;
+  std::map<Road::Type, double> roadWidths;
   roadWidths[Road::PRIMARY_ROAD] = primaryRoad.width;
   roadWidths[Road::SECONDARY_ROAD] = secondaryRoad.width;
 
