@@ -25,6 +25,8 @@ class TerrainRenderer;
 class OgreCity : public City, public Renderer
 {
   public:
+    static const double meter = 5;
+
     OgreCity(Ogre::SceneManager* sceneManagerObject);
     virtual ~OgreCity();
 
@@ -53,12 +55,13 @@ class OgreCity : public City, public Renderer
       */
     virtual void configuration()
     {
+      Random::setSeed(100);
+
       /* Primary roads configuration */
       primaryRoad.height = 1;
-      primaryRoad.width = 30;
+      primaryRoad.width = 4 * 3.3 * OgreCity::meter;
 
       primaryRoad.material = "Road";
-
 
       // Texture mapping on vertices: 0, 0.03125, 0.5, 1-0.03125, 1
       primaryRoad.verticesTextureMapping.push_back(0);
@@ -76,7 +79,7 @@ class OgreCity : public City, public Renderer
 
       /* Secondary roads configuration */
       secondaryRoad.height = 1;
-      secondaryRoad.width = 15;
+      secondaryRoad.width = 2 * 2 * OgreCity::meter;
 
       secondaryRoad.material = "Road";
 

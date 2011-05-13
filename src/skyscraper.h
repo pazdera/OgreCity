@@ -15,39 +15,21 @@
 #include <libcity.h>
 
 #include "renderer.h"
+#include "ogrebuilding.h"
 
-class SkyScraper : public Renderer, public Building
+class SkyScraper : public OgreBuilding
 {
   public:
     static const Type SKY_SCRAPER;
-    SkyScraper(Lot* parentAlottment, Ogre::SceneManager* manager);
+    SkyScraper(Lot* parentAlottment, Ogre::SceneManager* manager, Ogre::SceneNode* parentNode);
     ~SkyScraper();
 
-    void render();
-
   protected:
-    Ogre::String windowTileMaterial;
-    Ogre::String basementMaterial;
-    Ogre::String spacerMaterial;
-    Ogre::String rooftopMaterial;
+    virtual void configure();
+    void setupTextures();
 
-    double storeyHeight;
-    double basementHeight;
-    double spacerHeight;
-
-    Ogre::ManualObject* buildingObject;
-  private:
     virtual void interpretSymbol(char symbol);
-
-    Ogre::String getUniqueObjectName();
-
-    void drawBasement();
-    void drawFloor();
-    void drawSpacer();
-    void drawRooftop();
-    void substractBoundingBox();
-
-    void addPlane(Polygon const& plane, Vector const& surfaceNormal, Ogre::String const& material);
+  private:
 
     void initialize();
     void freeMemory();

@@ -12,6 +12,8 @@
 #include "ogrecity.h"
 #include "terrainrenderer.h"
 #include "streetgraphrenderer.h"
+#include "skyscraper.h"
+#include "olderbuilding.h"
 
 OgreCity::OgreCity(Ogre::SceneManager* sceneManagerObject)
   : sceneManager(sceneManagerObject), Renderer(sceneManager)
@@ -26,42 +28,72 @@ OgreCity::~OgreCity()
 void OgreCity::createPrimaryRoadNetwork()
 {
   /* Define city area constraints */
-  area->addVertex(Point(3000,3000));
-  area->addVertex(Point(3000,-3000));
-  area->addVertex(Point(-3000,-3000));
-  area->addVertex(Point(-3000,3000));
+  area->addVertex(Point(2000,2000));
+  area->addVertex(Point(2000,-2000));
+  area->addVertex(Point(-2000,-2000));
+  area->addVertex(Point(-2000,2000));
 
-  map->addRoad(Path(LineSegment(Point(3000,3000), Point(3000,-3000))));
-  map->addRoad(Path(LineSegment(Point(3000,-3000), Point(-3000,-3000))));
-  map->addRoad(Path(LineSegment(Point(-3000,-3000), Point(-3000,3000))));
-  map->addRoad(Path(LineSegment(Point(-3000,3000), Point(3000,3000))));
+  map->addRoad(Path(LineSegment(Point(2000,2000), Point(2000,-2000))));
+  map->addRoad(Path(LineSegment(Point(2000,-2000), Point(-2000,-2000))));
+  map->addRoad(Path(LineSegment(Point(-2000,-2000), Point(-2000,2000))));
+  map->addRoad(Path(LineSegment(Point(-2000,2000), Point(2000,2000))));
 
+//  area->addVertex(Point(1600,1600));
+//  area->addVertex(Point(1600,-1600));
+//  area->addVertex(Point(-1600,-1600));
+//  area->addVertex(Point(-1600,1600));
+//
+//  map->addRoad(Path(LineSegment(Point(1600,1600), Point(1600,-1600))));
+//  map->addRoad(Path(LineSegment(Point(1600,-1600), Point(-1600,-1600))));
+//  map->addRoad(Path(LineSegment(Point(-1600,-1600), Point(-1600,1600))));
+//  map->addRoad(Path(LineSegment(Point(-1600,1600), Point(1600,1600))));
 
-//  map->addRoad(Path(LineSegment(Point(-160.567, -2076.97, 0), Point(-75.5349, -3000, 0))));
-//  map->addRoad(Path(LineSegment(Point(2219.48, -3000, 0), Point(-75.5349, -3000, 0))));
-//  map->addRoad(Path(LineSegment(Point(-75.5349, -3000, 0), Point(-2060.82, -3000, 0))));
+//  area->addVertex(Point(1200,1200));
+//  area->addVertex(Point(1200,-1200));
+//  area->addVertex(Point(-1200,-1200));
+//  area->addVertex(Point(-1200,1200));
+//
+//  map->addRoad(Path(LineSegment(Point(1200,1200), Point(1200,-1200))));
+//  map->addRoad(Path(LineSegment(Point(1200,-1200), Point(-1200,-1200))));
+//  map->addRoad(Path(LineSegment(Point(-1200,-1200), Point(-1200,1200))));
+//  map->addRoad(Path(LineSegment(Point(-1200,1200), Point(1200,1200))));
 
-//  map->addRoad(Path(LineSegment(Point(0,0), Point(0,100))));
-//  map->addRoad(Path(LineSegment(Point(0,0), Point(-100,-100))));
-//  map->addRoad(Path(LineSegment(Point(0,0), Point(100,-100))));
-//  map->addRoad(Path(LineSegment(Point(-300,0), Point(300,0))));
-//  map->addRoad(Path(LineSegment(Point(-300,300), Point(-150,0))));
-//  map->addRoad(Path(LineSegment(Point(-300,-300), Point(150,0))));
+//  area->addVertex(Point(800,800));
+//  area->addVertex(Point(800,-800));
+//  area->addVertex(Point(-800,-800));
+//  area->addVertex(Point(-800,800));
+//
+//  map->addRoad(Path(LineSegment(Point(800,800), Point(800,-800))));
+//  map->addRoad(Path(LineSegment(Point(800,-800), Point(-800,-800))));
+//  map->addRoad(Path(LineSegment(Point(-800,-800), Point(-800,800))));
+//  map->addRoad(Path(LineSegment(Point(-800,800), Point(800,800))));
 
-
+//    area->addVertex(Point(600,600));
+//    area->addVertex(Point(600,-600));
+//    area->addVertex(Point(-600,-600));
+//    area->addVertex(Point(-600,600));
+//
+//    map->addRoad(Path(LineSegment(Point(600,600), Point(600,-600))));
+//    map->addRoad(Path(LineSegment(Point(600,-600), Point(-600,-600))));
+//    map->addRoad(Path(LineSegment(Point(-600,-600), Point(-600,600))));
+//    map->addRoad(Path(LineSegment(Point(-600,600), Point(600,600))));
 
   OrganicRoadPattern* generator = new OrganicRoadPattern();
 
   generator->setTarget(map);
   generator->setAreaConstraints(area);
   generator->setRoadType(Road::PRIMARY_ROAD);
-  generator->setRoadLength(2000, 2500);
+  //generator->setRoadLength(600, 800);
+  //generator->setSnapDistance(200);
+  generator->setRoadLength(1200, 2000);
   generator->setSnapDistance(800);
   generator->setTurnAngle(60, 90);
 
-  generator->setInitialPosition(Point(-2800, 0));
+  generator->setInitialPosition(area->centroid());
 
   generator->generate();
+
+  map->removeFilamentRoads();
 }
 
 void OgreCity::createZones()
@@ -89,6 +121,7 @@ void OgreCity::createSecondaryRoadNetwork()
 
     delete generator;
   }
+  map->removeFilamentRoads();
 }
 
 void OgreCity::createBlocks()
@@ -102,6 +135,13 @@ void OgreCity::createBlocks()
        zone++)
   {
     (*zone)->createBlocks(roadWidths);
+     std::list<Block*> blocks = (*zone)->getBlocks();
+     for (std::list<Block*>::iterator blocksIterator = blocks.begin();
+          blocksIterator != blocks.end();
+          blocksIterator++)
+     {
+       (*blocksIterator)->createLots(150,150,0);
+     }
   }
 }
 
@@ -133,7 +173,75 @@ void OgreCity::renderRoadNetwork()
 }
 
 void OgreCity::renderBuildings()
-{}
+{
+  return;
+  Point cityCenter = area->centroid();
+  double distanceToCenter;
+
+  Random generator;
+  Ogre::SceneNode* zoneNode, * blockNode;
+
+  int i = 0;
+  for (std::list<Zone*>::iterator zonesIterator = zones->begin();
+       zonesIterator != zones->end();
+       zonesIterator++)
+  {
+   zoneNode = sceneManager->getRootSceneNode()->createChildSceneNode();
+
+   std::list<Block*> blocks = (*zonesIterator)->getBlocks();
+   for (std::list<Block*>::iterator blocksIterator = blocks.begin();
+        blocksIterator != blocks.end();
+        blocksIterator++)
+   {
+     blockNode = zoneNode->createChildSceneNode();
+
+     std::list<Lot*> lots = (*blocksIterator)->getLots();
+     for (std::list<Lot*>::iterator lotsIterator = lots.begin();
+        lotsIterator != lots.end();
+        lotsIterator++, i++)
+     {
+       OgreBuilding* building;
+
+       /* Discard small lots. */
+       if ((*lotsIterator)->areaConstraints().area() < 5000) continue;
+
+
+       debug("lot: " << i);
+       switch (generator.generateInteger(0,4))
+       {
+         case 0:
+           building = new SkyScraper(*lotsIterator, sceneManager, blockNode);
+           break;
+         case 1:
+         case 2:
+         case 3:
+         case 4:
+           building = new OlderBuilding(*lotsIterator, sceneManager, blockNode);
+           break;
+         default:
+           assert("Wrong building configuration");
+       }
+
+       distanceToCenter = Vector(cityCenter, (*lotsIterator)->areaConstraints().vertex(0)).length();
+       if (distanceToCenter > 500)
+       {
+          building->setMaxHeight(generator.generateInteger(3, 7) * 2.5 * OgreCity::meter);
+       }
+       else
+       {
+          building->setMaxHeight(generator.generateInteger(20, 30) * 2.5 * OgreCity::meter);
+       }
+       //building->setMaxHeight(50 * 2.5 * OgreCity::meter);
+
+       if (generator.generateBool(0.8))
+       {
+         building->render();
+       }
+       delete building;
+     }
+   }
+  }
+}
 
 Ogre::Vector3 OgreCity::libcityToOgre(Point const& point)
 {

@@ -5,74 +5,108 @@
  * @date 02.05.2011
  * @author Radek Pazdera (xpazde00@stud.fit.vutbr.cz)
  *
- * @see streetgraphrenderer.h
+ * @see skyscraper.h
  *
  */
 
 #include "skyscraper.h"
 
 #include "ogrecity.h"
+#include "libcity.h"
 
 /* Ogre3D */
 #include <OgreManualObject.h>
 
-const Building::Type SKY_SCRAPER = Building::defineNewEntityType();
+const Building::Type SkyScraper::SKY_SCRAPER = Building::defineNewEntityType();
 
-SkyScraper::SkyScraper(Lot* parentAlottment, Ogre::SceneManager* manager)
-  : Renderer(manager), Building(parentAlottment)
+SkyScraper::SkyScraper(Lot* parentAlottment, Ogre::SceneManager* manager, Ogre::SceneNode* parentNode)
+  : OgreBuilding(parentAlottment, manager, parentNode)
 {
   initialize();
 }
 
 void SkyScraper::initialize()
 {
-  /*
-    B: draw basement
-    F: draw floor
-    S: draw spacer between floors
-    R: draw rooftop
-    E: floor expansion
-    -: substract bounding box
-   */
-  addToAlphabet("BFSRE-");
+  configure();
+}
 
-  setAxiom("{BFE}");
+void SkyScraper::configure()
+{
+  setAxiom("{BFER}");
 
   addRule('E', "FE");   // Next normal floor
-  addRule('E', "R-FE"); // Substraction
+  addRule('E', "SFE");  // Ledge, then floor
+  addRule('E', "R-FE"); // Setbacks
 
   setInitialDirection(Vector(0,0,1));
 
-  windowTileMaterial = "";
-  basementMaterial   = "";
-  spacerMaterial     = "";
-  rooftopMaterial    = "";
+  Random generator;
+  setMaxHeight(generator.generateInteger(20, 30) * 2.5 * OgreCity::meter);
 
-  buildingObject = new Ogre::ManualObject(getUniqueObjectName());
+  setupTextures();
+}
+
+void SkyScraper::setupTextures()
+{
+  Random generator;
+  switch (generator.generateInteger(0,3))
+  {
+    case 0:
+      windowTileMaterial = "BrickWindow";
+      basementMaterial   = "HotelWindow";
+      spacerMaterial     = "BrickLedge";
+      rooftopMaterial    = "RoofTop";
+
+      storeyHeight = 2.5 * OgreCity::meter;
+      basementHeight = 3 * OgreCity::meter;
+      spacerHeight = 1 * OgreCity::meter;
+      tileWidth = 10 * OgreCity::meter;
+      break;
+    case 1:
+      windowTileMaterial = "HotelWindow";
+      basementMaterial   = "HotelWindow";
+      spacerMaterial     = "HotelLedge";
+      rooftopMaterial    = "RoofTop";
+
+      storeyHeight = 2.5 * OgreCity::meter;
+      basementHeight = 3 * OgreCity::meter;
+      spacerHeight = 1 * OgreCity::meter;
+      tileWidth = 10 * OgreCity::meter;
+      break;
+    case 2:
+      windowTileMaterial = "OfficeBuildingWindow";
+      basementMaterial   = "HotelWindow";
+      spacerMaterial     = "HotelLedge";
+      rooftopMaterial    = "RoofTop";
+
+      storeyHeight = 2.5 * OgreCity::meter;
+      basementHeight = 3 * OgreCity::meter;
+      spacerHeight = 1 * OgreCity::meter;
+      tileWidth = 10 * OgreCity::meter;
+      break;
+    case 3:
+      windowTileMaterial = "HistoricWindow";
+      basementMaterial   = "HotelWindow";
+      spacerMaterial     = "HotelLedge";
+      rooftopMaterial    = "RoofTop";
+
+      storeyHeight = 5 * OgreCity::meter;
+      basementHeight = 3 * OgreCity::meter;
+      spacerHeight = 1 * OgreCity::meter;
+      tileWidth = 10 * OgreCity::meter;
+      break;
+    default:
+      assert("Wrong configuration.");
+  }
 }
 
 void SkyScraper::interpretSymbol(char symbol)
 {
   switch (symbol)
   {
-    case 'B':
-      drawBasement();
-      break;
-    case 'F':
-      drawFloor();
-      break;
-    case 'S':
-      drawSpacer();
-      break;
-    case 'R':
-      drawRooftop();
-      break;
-    case '-':
-      substractBoundingBox();
-      break;
     default:
       /* Try to interpret symbols defined in parent. */
-      Building::interpretSymbol(symbol);
+      OgreBuilding::interpretSymbol(symbol);
       break;
   }
 }
@@ -83,91 +117,4 @@ SkyScraper::~SkyScraper()
 }
 
 void SkyScraper::freeMemory()
-{
-  delete buildingObject;
-}
-
-void SkyScraper::drawBasement()
-{
-  Point lowerBound = cursor.getPosition();
-  cursor.move(basementHeight);
-  Point higherBound = cursor.getPosition();
-
-  // for each bounding boxes base edge
-  //   create wall polygon (4 vertices)
-  //   decide what normal will the surface be on polygon edgeNormal*(-1)
-  //   draw polygon with tiled texture
-
-  Polygon base = boundingBox->base();
-  Polygon wall;
-  Vector normal;
-  Vector ceilingOffset = higherBound - lowerBound;
-  int current, next;
-  for (int i = 0; i < base.numberOfVertices(); i++)
-  {
-    current = i;
-    next = (i+1) % base.numberOfVertices();
-
-    normal = base.edgeNormal(current)*(-1);
-
-    wall.clear();
-    wall.addVertex(base.vertex(current));
-    wall.addVertex(base.vertex(next) + ceilingOffset);
-    wall.addVertex(base.vertex(next) + ceilingOffset);
-    wall.addVertex(base.vertex(current) + ceilingOffset);
-
-    addPlane(wall, normal, basementMaterial);
-  }
-}
-
-void SkyScraper::drawFloor()
-{
-
-}
-
-void SkyScraper::drawSpacer()
-{
-
-}
-
-void SkyScraper::drawRooftop()
-{
-
-}
-
-void SkyScraper::substractBoundingBox()
-{
-
-}
-
-void SkyScraper::render()
-{
-
-}
-
-void SkyScraper::addPlane(Polygon const& plane, Vector const& surfaceNormal, Ogre::String const& material)
-{
-  assert(plane.numberOfVertices() == 4);
-
-  buildingObject->begin(basementMaterial);
-
-  for (int i = 0; i < plane.numberOfVertices(); i++)
-  {
-    buildingObject->position(OgreCity::libcityToOgre(plane.vertex(i)));
-  }
-
-  buildingObject->quad(0, 1, 2, 3);
-
-  buildingObject->end();
-}
-
-Ogre::String SkyScraper::getUniqueObjectName()
-{
-  /* Generate unique alias for naming Ogre entities */
-  static int roadNumber = 0;
-  Ogre::StringStream convertor;
-  convertor << roadNumber;
-  roadNumber++;
-
-  return "Building_" + convertor.str();
-}
+{}

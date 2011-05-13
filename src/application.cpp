@@ -43,10 +43,11 @@ void Application::createScene(void)
   city->render();
 
   /* Add a custom ogre :-) */
-  Ogre::Entity* ogre = mSceneMgr->createEntity("Ogre", "ogrehead.mesh");
-  Ogre::SceneNode* ogreNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-  ogreNode->attachObject(ogre);
-  ogreNode->setPosition(Ogre::Vector3(100, 50, 100));
+//  Ogre::Entity* ogre = mSceneMgr->createEntity("Ogre", "ogrehead.mesh");
+//  ogre->setCastShadows(true);
+//  Ogre::SceneNode* ogreNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+//  ogreNode->attachObject(ogre);
+//  ogreNode->setPosition(Ogre::Vector3(0, 300, 0));
 //
 //  Ogre::Entity* ogre2 = mSceneMgr->createEntity("Ogre2", "ogrehead.mesh");
 //  Ogre::SceneNode* ogreNode2 = ogreNode->createChildSceneNode();
@@ -57,7 +58,7 @@ void Application::createScene(void)
 
 void Application::setupCamera()
 {
-  mCamera->setPosition(Ogre::Vector3(100, 100, 100));
+  mCamera->setPosition(Ogre::Vector3(100, 100, 500));
   mCamera->lookAt(Ogre::Vector3(0, 0, 0));
   mCamera->setNearClipDistance(10);
   mCamera->setFarClipDistance(5000);

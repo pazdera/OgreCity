@@ -313,7 +313,8 @@ void StreetGraphRenderer::drawRoad(Road* road, RoadParameters parameters, Ogre::
 
   // add mesh to scene
   roadEntity = sceneManager->createEntity(roadName + "Ent", roadName + "Mesh");
-  roadEntity->setRenderQueueGroupAndPriority(10, 1000);
+  roadEntity->setCastShadows(false);
+  //roadEntity->setRenderQueueGroupAndPriority(10, 1000);
   roadSceneNode = roadSceneNode->createChildSceneNode();
   roadSceneNode->attachObject(roadEntity);
 
@@ -763,6 +764,7 @@ void StreetGraphRenderer::precomputeIntersectionsVertices()
 
           Ogre::Entity* intersectionEntity;
           intersectionEntity = sceneManager->createEntity(uniqueName + "Entity", uniqueName + "Mesh");
+          intersectionEntity->setCastShadows(false);
           roadSceneNode = roadSceneNode->createChildSceneNode();
           roadSceneNode->attachObject(intersectionEntity);
         };
@@ -771,6 +773,29 @@ void StreetGraphRenderer::precomputeIntersectionsVertices()
         {
           debug("4-way intersection " << intersection->position().toString());
           sortIntersectingRoadsCounterclockwise(intersection, &roadsOfCurrentIntersection);
+
+          // We have the roads sorted, but we need to decide which one will go first
+          Vector firstDirection = getExtensionRay(intersection, roadsOfCurrentIntersection.at(0)).direction()*(-1),
+                 secondDirection = getExtensionRay(intersection, roadsOfCurrentIntersection.at(1)).direction()*(-1),
+                 thirdDirection = getExtensionRay(intersection, roadsOfCurrentIntersection.at(2)).direction()*(-1),
+                 fourthDirection = getExtensionRay(intersection, roadsOfCurrentIntersection.at(3)).direction()*(-1);
+
+          double angle12 = firstDirection.angleTo(secondDirection),
+                 angle23 = secondDirection.angleTo(thirdDirection),
+                 angle34 = thirdDirection.angleTo(fourthDirection),
+                 angle41 = thirdDirection.angleTo(firstDirection);
+
+          debug("Roads are:");
+          debug("1: " << roadsOfCurrentIntersection.at(0)->toString());
+          debug("2: " << roadsOfCurrentIntersection.at(1)->toString());
+          debug("3: " << roadsOfCurrentIntersection.at(2)->toString());
+          debug("4: " << roadsOfCurrentIntersection.at(3)->toString());
+
+          debug("Angles between roads are:");
+          debug("  Angle(1,2): " << angle12 << ", angle to X " << firstDirection.angleToXAxis());
+          debug("  Angle(2,3): " << angle23 << ", angle to X " << secondDirection.angleToXAxis());
+          debug("  Angle(3,4): " << angle34 << ", angle to X " << thirdDirection.angleToXAxis());
+          debug("  Angle(4,1): " << angle41 << ", angle to X " << fourthDirection.angleToXAxis());
 
           const int NUMBER_OF_WAYS = 4;
           Vector normals[NUMBER_OF_WAYS];
@@ -877,7 +902,7 @@ void StreetGraphRenderer::precomputeIntersectionsVertices()
           }
           assert(intersectionResult != Line::NONINTERSECTING);
 
-          /* Now we have the 3 rays we want cut our roads with. */
+          /* Now we have the 4 rays we want cut our roads with. */
           Line constraints[NUMBER_OF_WAYS];
           constraints[0].set(topRight, bottomRight);
           constraints[1].set(topLeft, topRight);
@@ -897,6 +922,7 @@ void StreetGraphRenderer::precomputeIntersectionsVertices()
 
               intersectionResult = projectedVertexRays[way][vertexIndex].intersection2D(constraints[way], &raysIntersection);
               intersectionVertices[intersection][roadsOfCurrentIntersection[way]][index] = raysIntersection;
+              debug("intersectionResult == " << intersectionResult);
               assert(intersectionResult == Line::INTERSECTING);
             }
 
@@ -993,6 +1019,7 @@ void StreetGraphRenderer::precomputeIntersectionsVertices()
 
           Ogre::Entity* intersectionEntity;
           intersectionEntity = sceneManager->createEntity(uniqueName + "Entity", uniqueName + "Mesh");
+          intersectionEntity->setCastShadows(false);
           roadSceneNode = roadSceneNode->createChildSceneNode();
           roadSceneNode->attachObject(intersectionEntity);
         };
@@ -1083,6 +1110,10 @@ void StreetGraphRenderer::determineMiddleRoad(Intersection* intersection, std::v
          angle23 = secondDirection.angleTo(thirdDirection),
          angle31 = thirdDirection.angleTo(firstDirection);
 
+  debug("Roads are:");
+  debug("1: " << roadsOfCurrentIntersection->at(0)->toString());
+  debug("2: " << roadsOfCurrentIntersection->at(1)->toString());
+  debug("3: " << roadsOfCurrentIntersection->at(2)->toString());
 
   debug("Angles between roads are:");
   debug("  Angle(1,2): " << angle12 << ", angle to X " << firstDirection.angleToXAxis());

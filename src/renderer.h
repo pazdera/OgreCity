@@ -17,6 +17,26 @@
 
 class Renderer
 {
+  public:
+    typedef Ogre::String MaterialDefinition;
+    /*struct MaterialDefinition
+    {
+      Ogre::String name;
+      double width;
+      double height;
+
+      bool repeatX;
+      bool repeatY;
+
+      MaterialDefinition()
+      {
+        width = 0;
+        height = 0;
+        name = "";
+        repeatX = false;
+        repeatY = false;
+      }
+    };*/
   private:
     /**
       Rendering class cannot be constructed without saying,
@@ -30,7 +50,7 @@ class Renderer
 
     /**
       All rendering classes must implement this method, that is invoked
-      when the scene is drawn
+      when the scene is drawn.
       */
     virtual void render() = 0;
 
