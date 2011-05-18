@@ -1,2 +1,35 @@
-== This is OgreCity ==
-Hi!
+This is OgreCity.
+
+AUTHOR
+ Radek Pazdera (radek.pazdera@gmail.com)
+
+BUILD
+ Build the project by writing `make'. The project
+ is based on libcity library (https://github.com/astro-/libcity).
+
+ You have to either install it or set the paths apropriately in
+ the root Makefile and then in the CMakeLists.txt in
+ src/ dir.
+
+DOCUMENTATION
+  Documentation can be extracted from the source codes with doxygen.
+
+    make doc
+
+  Will create documentation into doc/ folder.
+
+LICENSE
+  Copyright (C) 2011 Radek Pazdera <radek.pazdera@gmail.com>
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
