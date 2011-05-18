@@ -1,0 +1,102 @@
+material Intersection
+{
+   technique
+   {
+      pass
+      {
+         texture_unit
+         {
+            texture highway_intersection.jpg
+            filtering none
+            //filtering anisotropic anisotropic linear
+            //max_anisotropy 1000
+         }
+      }
+   }
+}
+
+material Road3WayIntersection
+{
+   technique
+   {
+      pass
+      {
+         texture_unit
+         {
+            texture 3way.png
+            filtering none
+            //filtering anisotropic anisotropic linear
+            //max_anisotropy 1000
+         }
+      }
+   }
+}
+
+material Road4WayIntersection
+{
+   technique
+   {
+      pass
+      {
+         texture_unit
+         {
+            texture 4way.png
+            filtering none
+            //filtering anisotropic anisotropic linear
+            //max_anisotropy 1000
+         }
+      }
+   }
+}
+
+
+material Road
+{
+   technique
+   {
+      pass
+      {
+         texture_unit
+         {
+            texture road.gif
+            filtering none
+            //filtering anisotropic anisotropic linear
+            //max_anisotropy 1000
+         }
+      }
+   }
+}
+
+material Highway
+{
+   technique
+   {
+      pass
+      {
+         texture_unit
+         {
+            texture primary_road.png
+            filtering none
+            //filtering anisotropic anisotropic linear
+            //max_anisotropy 1000
+         }
+      }
+   }
+}
+
+material SecondaryRoad
+{
+   technique
+   {
+      pass
+      {
+         texture_unit
+         {
+            texture secondary_road_withside_walk.png
+            filtering none
+            //filtering anisotropic anisotropic linear
+            //max_anisotropy 1000
+         }
+      }
+   }
+}

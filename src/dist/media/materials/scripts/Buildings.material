@@ -1,0 +1,1051 @@
+material HotelWindow
+{
+   receive_shadows on
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.3 0.3 0.3 0.3
+        lighting on
+
+        texture_unit
+        {
+          texture hotel_window.jpg
+          filtering anisotropic anisotropic linear
+          scale 0.5 1.0
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material HotelLedge
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.9 0.9 0.9 0.9
+        lighting on
+
+        texture_unit
+        {
+          texture hotelLedge.jpg
+          filtering anisotropic anisotropic linear
+          scale 0.5 1.0
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+
+material DirtyRooftop1
+{
+   technique
+   {
+      pass
+      {
+        ambient 0.8 0.8 0.8 0.8
+        diffuse 0.9 0.9 0.9 0.9
+        lighting on
+
+        texture_unit
+        {
+          texture roof065.JPG
+          filtering anisotropic anisotropic linear
+          scale 0.5 0.5
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material OfficeBuildingWindow
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 1.0 1.0 1.0 1.0
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.9 0.9 0.9 0.9
+        lighting on
+
+        texture_unit
+        {
+          texture office_building1.jpg
+          filtering anisotropic anisotropic linear
+          //scale 0.5 1.0
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material OfficeBuildingLedge
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 1.0 1.0 1.0 1.0
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.9 0.9 0.9 0.9
+        lighting on
+
+        texture_unit
+        {
+          texture office_building1_ledge1.png
+          filtering anisotropic anisotropic linear
+          scale 0.5 1.0
+          max_anisotropy 5
+        }
+      }
+   }
+}
+material RoofTop
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture roof016.jpg
+          filtering anisotropic anisotropic linear
+          //scale 0.6 0.6
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material BrickWindow
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture brick_tall.jpg
+          filtering anisotropic anisotropic linear
+          scale 0.5 1.0
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material BrickLedge
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture brick_ledge.jpg
+          filtering anisotropic anisotropic linear
+          scale 0.5 1.0
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material HistoricWindow
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture historic_2nd_floor.jpg
+          filtering anisotropic anisotropic linear
+          scale 0.5 1.0
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+
+material HistoricLedge
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture historic_ledge.jpg
+          filtering anisotropic anisotropic linear
+          scale 0.5 1.0
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material RedBuildingWindowWithLedge
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture red_building_window_with_ledge.png
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material RedBuildingBalcony
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture red_building_balcony.png
+          filtering anisotropic anisotropic linear
+          scale 0.2 1.0
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material RedBuildingLedge
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture red_building_ledge.png
+          filtering anisotropic anisotropic linear
+          scale 0.2 1.0
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material RedBuildingRooftopLedge
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture red_building_rooftop_ledge.png
+          filtering anisotropic anisotropic linear
+          scale 0.2 1.0
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material Concrete
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture concrete.png
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material OldRooftop
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture roof050.jpg
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material WoodenRooftop
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture roof013.jpg
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material StreetLevel1
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture street_level_1.jpg
+          scale 0.8 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material StreetLevel2
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture street_level_2.jpg
+          scale 1.0 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material StreetLevel3
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture street_level_3.jpg
+          scale 0.5 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material StreetLevel4
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture street_level_4.jpg
+          scale 0.4 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material StreetLevel5
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture street_level_5.jpg
+          scale 0.4 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material StreetLevel6
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture street_level_6.jpg
+          scale 0.4 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material StreetLevel7
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture street_level_7.jpg
+          scale 0.4 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material StreetLevel8
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture street_level_8.jpg
+          scale 0.4 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material StreetLevel9
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture street_level_9.jpg
+          scale 0.4 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material StreetLevel10
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture street_level_10.jpg
+          scale 1.0 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material StreetLevel12
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture street_level_12.jpg
+          scale 0.4 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material ModernWindow2
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture modern_window_2.png
+          scale 0.5 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material ModernLedge2
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture modern_ledge_2.png
+          scale 0.5 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material SuburbanFloor
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture suburban_floor.png
+          scale 1.0 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material SuburbanStreetLevel
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture suburban_street_level.png
+          scale 1.0 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+
+material RedRooftop
+{
+   technique
+   {
+      pass
+      {
+        //emissive 1.0 1.0 1.0 1.0
+        ambient 0.8 0.8 0.8 0.8
+        //specular 0.5 0.5 0.5 0.5
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture rooftop_tiled.jpg
+          scale 1.0 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material ModernWindow
+{
+   technique
+   {
+      pass
+      {
+        ambient 0.8 0.8 0.8 0.8
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture modern_window.png
+          scale 0.5 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material ModernLedge
+{
+   technique
+   {
+      pass
+      {
+        ambient 0.8 0.8 0.8 0.8
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture modern_ledge.png
+          scale 0.5 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material WhiteMetalRooftop
+{
+   technique
+   {
+      pass
+      {
+        ambient 0.8 0.8 0.8 0.8
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture roof064.JPG
+          scale 0.25 0.25
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+
+material GlassTowerWindow
+{
+   technique
+   {
+      pass
+      {
+        ambient 0.8 0.8 0.8 0.8
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture glass_tower_window.png
+          scale 1.0 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+
+material GlassTowerLedge
+{
+   technique
+   {
+      pass
+      {
+        ambient 0.8 0.8 0.8 0.8
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture glass_tower_ledge.png
+          scale 1.0 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material SkyScraperRooftop
+{
+   technique
+   {
+      pass
+      {
+        ambient 0.8 0.8 0.8 0.8
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture roof093.JPG
+          scale 1.0 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material Brick3Window
+{
+   technique
+   {
+      pass
+      {
+        ambient 0.8 0.8 0.8 0.8
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture brick3_window.png
+          scale 0.5 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material Brick3Ledge
+{
+   technique
+   {
+      pass
+      {
+        ambient 0.8 0.8 0.8 0.8
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture brick3_ledge.png
+          scale 0.5 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material Brick2Window
+{
+   technique
+   {
+      pass
+      {
+        ambient 0.8 0.8 0.8 0.8
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture brick2_window.png
+          scale 0.5 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material Brick2Ledge
+{
+   technique
+   {
+      pass
+      {
+        ambient 0.8 0.8 0.8 0.8
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture brick2_ledge.png
+          scale 0.5 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material SuburbanResidenceFloor
+{
+   technique
+   {
+      pass
+      {
+        ambient 0.8 0.8 0.8 0.8
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture suburban_residence_floor.png
+          scale 1.0 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material SuburbanResidenceFloor
+{
+   technique
+   {
+      pass
+      {
+        ambient 0.8 0.8 0.8 0.8
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture suburban_residence_floor.png
+          scale 1.0 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material Modern3Window
+{
+   technique
+   {
+      pass
+      {
+        ambient 0.8 0.8 0.8 0.8
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture modern3_window.png
+          scale 0.5 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
+
+material Modern3Ledge
+{
+   technique
+   {
+      pass
+      {
+        ambient 0.8 0.8 0.8 0.8
+        diffuse 0.5 0.5 0.5 0.5
+        lighting on
+
+        texture_unit
+        {
+          texture modern3_ledge.png
+          scale 0.5 1.0
+          filtering anisotropic anisotropic linear
+          max_anisotropy 5
+        }
+      }
+   }
+}
