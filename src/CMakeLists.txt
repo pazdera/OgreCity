@@ -105,6 +105,9 @@ set(HDRS
         ./skyscraper.h
         ./ogrebuilding.h
         ./olderbuilding.h
+        ./redbuilding.h
+        ./suburbanhouse.h
+        ./screenshotmanager.h
 )
 
 set(SRCS
@@ -119,7 +122,9 @@ set(SRCS
         ./skyscraper.cpp
         ./ogrebuilding.cpp
         ./olderbuilding.cpp
-
+        ./redbuilding.cpp
+        ./suburbanhouse.cpp
+        ./screenshotmanager.cpp
 )
 
 include_directories( ${OIS_INCLUDE_DIRS}

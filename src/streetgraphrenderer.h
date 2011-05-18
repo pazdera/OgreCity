@@ -89,16 +89,29 @@ class StreetGraphRenderer : public Renderer
       Function generates a mesh using Ogre::ManualMesh. Then
       creates an Entity, SceneNode and inserts the road
       into the scene.
-     @todo
-      Make implementation more versatile and configurable. Texture,
-      road width, sampling size should be configurable. Also modify
-      return value (or remove it completely).
 
      @param[in] road           Road to be rendered.
      @param[in] roadParameters Parameters of the road (@see RoadParameters).
      @param[in] terrain        Terrain on which the road will reside on (for adjusting height of the road).
      */
     void drawRoad(Road* road, RoadParameters parameters, Ogre::Terrain* terrain);
+
+    /**
+      Draw a road on terrain with specified path.
+     @note
+      This is another, a bit slower, implementation of drawing roads. But it
+      renders a WAY better result. Use drawRoad() when it does provide sufficient
+      results. Otherwise try this.
+     @remarks
+      Function generates a mesh using Ogre::ManualMesh. Then
+      creates an Entity, SceneNode and inserts the road
+      into the scene.
+
+     @param[in] road           Road to be rendered.
+     @param[in] roadParameters Parameters of the road (@see RoadParameters).
+     @param[in] terrain        Terrain on which the road will reside on (for adjusting height of the road).
+     */
+    void drawRoadSampled(Road* road, RoadParameters parameters, Ogre::Terrain* terrain);
 
     /**
       Experimental function that attempts to locate terrain

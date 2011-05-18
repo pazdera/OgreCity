@@ -24,6 +24,7 @@ This source file is part of the
 -----------------------------------------------------------------------------
 */
 #include "baseapplication.h"
+#include "screenshotmanager.h"
 
 //-------------------------------------------------------------------------------------
 BaseApplication::BaseApplication(void)
@@ -66,7 +67,7 @@ bool BaseApplication::configure(void)
     {
         // If returned true, user clicked OK so initialise
         // Here we choose to let the system create a default rendering window by passing 'true'
-        mWindow = mRoot->initialise(true, "city3D: libcity demo");
+        mWindow = mRoot->initialise(true, "OgreCity: libcity demo application");
 
         return true;
     }
@@ -361,7 +362,9 @@ bool BaseApplication::keyPressed( const OIS::KeyEvent &arg )
     }
     else if (arg.key == OIS::KC_SYSRQ)   // take a screenshot
     {
-        mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
+        ScreenshotManager screen(mWindow, 8, ".png", 0);
+        screen.makeScreenshot(mCamera, "highres");
+        //mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
     }
     else if (arg.key == OIS::KC_ESCAPE)
     {

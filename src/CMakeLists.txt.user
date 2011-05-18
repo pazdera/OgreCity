@@ -90,7 +90,7 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >all</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-hiE1Tj1Zuh,guid=3180560d083f0913e094b6e04dcc441b</value>
+    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-oIlXSUh1oM,guid=494c0fad10d5691bf5a519d14dd1e391</value>
     <value type="QString" >DESKTOP_SESSION=gnome</value>
     <value type="QString" >DESKTOP_STARTUP_ID=</value>
     <value type="QString" >DISPLAY=:0.0</value>
@@ -98,9 +98,9 @@
     <value type="QString" >GDM_KEYBOARD_LAYOUT=cz</value>
     <value type="QString" >GDM_LANG=cs_CZ.UTF-8</value>
     <value type="QString" >GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
-    <value type="QString" >GNOME_KEYRING_PID=2329</value>
-    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-46yTzg/socket</value>
-    <value type="QString" >GPG_AGENT_INFO=/tmp/gpg-OsjuVy/S.gpg-agent:2391:1</value>
+    <value type="QString" >GNOME_KEYRING_PID=3125</value>
+    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-uxTB0j/socket</value>
+    <value type="QString" >GPG_AGENT_INFO=/tmp/gpg-zIaRhl/S.gpg-agent:3187:1</value>
     <value type="QString" >GTK_MODULES=canberra-gtk-module</value>
     <value type="QString" >GTK_RC_FILES=/etc/gtk/gtkrc:/home/astro/.gtkrc-1.2-gnome2</value>
     <value type="QString" >HOME=/home/astro</value>
@@ -111,16 +111,16 @@
     <value type="QString" >ORBIT_SOCKETDIR=/tmp/orbit-astro</value>
     <value type="QString" >PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
     <value type="QString" >PWD=/home/astro</value>
-    <value type="QString" >SESSION_MANAGER=local/astro-desktop:@/tmp/.ICE-unix/2344,unix/astro-desktop:/tmp/.ICE-unix/2344</value>
+    <value type="QString" >SESSION_MANAGER=local/astro-desktop:@/tmp/.ICE-unix/3140,unix/astro-desktop:/tmp/.ICE-unix/3140</value>
     <value type="QString" >SHELL=/bin/bash</value>
     <value type="QString" >SPEECHD_PORT=7560</value>
-    <value type="QString" >SSH_AGENT_PID=2390</value>
-    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-46yTzg/socket.ssh</value>
+    <value type="QString" >SSH_AGENT_PID=3186</value>
+    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-uxTB0j/socket.ssh</value>
     <value type="QString" >USER=astro</value>
     <value type="QString" >USERNAME=astro</value>
-    <value type="QString" >XAUTHORITY=/var/run/gdm/auth-for-astro-BNUsUN/database</value>
+    <value type="QString" >XAUTHORITY=/var/run/gdm/auth-for-astro-7qX3MS/database</value>
     <value type="QString" >XDG_DATA_DIRS=/usr/share/gnome:/usr/local/share/:/usr/share/</value>
-    <value type="QString" >XDG_SESSION_COOKIE=869f1291d2d8795cf05c1a524af5b136-1305232411.83501-923800963</value>
+    <value type="QString" >XDG_SESSION_COOKIE=869f1291d2d8795cf05c1a524af5b136-1305600913.165544-306187245</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList" >
     <value type="QString" >all</value>

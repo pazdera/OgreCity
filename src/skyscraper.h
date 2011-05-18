@@ -28,6 +28,8 @@ class SkyScraper : public OgreBuilding
     virtual void configure();
     void setupTextures();
 
+    virtual void setback();
+
     virtual void interpretSymbol(char symbol);
   private:
 

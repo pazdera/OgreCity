@@ -14,6 +14,8 @@
 #include "streetgraphrenderer.h"
 #include "skyscraper.h"
 #include "olderbuilding.h"
+#include "redbuilding.h"
+#include "suburbanhouse.h"
 
 OgreCity::OgreCity(Ogre::SceneManager* sceneManagerObject)
   : sceneManager(sceneManagerObject), Renderer(sceneManager)
@@ -27,56 +29,6 @@ OgreCity::~OgreCity()
 
 void OgreCity::createPrimaryRoadNetwork()
 {
-  /* Define city area constraints */
-  area->addVertex(Point(2000,2000));
-  area->addVertex(Point(2000,-2000));
-  area->addVertex(Point(-2000,-2000));
-  area->addVertex(Point(-2000,2000));
-
-  map->addRoad(Path(LineSegment(Point(2000,2000), Point(2000,-2000))));
-  map->addRoad(Path(LineSegment(Point(2000,-2000), Point(-2000,-2000))));
-  map->addRoad(Path(LineSegment(Point(-2000,-2000), Point(-2000,2000))));
-  map->addRoad(Path(LineSegment(Point(-2000,2000), Point(2000,2000))));
-
-//  area->addVertex(Point(1600,1600));
-//  area->addVertex(Point(1600,-1600));
-//  area->addVertex(Point(-1600,-1600));
-//  area->addVertex(Point(-1600,1600));
-//
-//  map->addRoad(Path(LineSegment(Point(1600,1600), Point(1600,-1600))));
-//  map->addRoad(Path(LineSegment(Point(1600,-1600), Point(-1600,-1600))));
-//  map->addRoad(Path(LineSegment(Point(-1600,-1600), Point(-1600,1600))));
-//  map->addRoad(Path(LineSegment(Point(-1600,1600), Point(1600,1600))));
-
-//  area->addVertex(Point(1200,1200));
-//  area->addVertex(Point(1200,-1200));
-//  area->addVertex(Point(-1200,-1200));
-//  area->addVertex(Point(-1200,1200));
-//
-//  map->addRoad(Path(LineSegment(Point(1200,1200), Point(1200,-1200))));
-//  map->addRoad(Path(LineSegment(Point(1200,-1200), Point(-1200,-1200))));
-//  map->addRoad(Path(LineSegment(Point(-1200,-1200), Point(-1200,1200))));
-//  map->addRoad(Path(LineSegment(Point(-1200,1200), Point(1200,1200))));
-
-//  area->addVertex(Point(800,800));
-//  area->addVertex(Point(800,-800));
-//  area->addVertex(Point(-800,-800));
-//  area->addVertex(Point(-800,800));
-//
-//  map->addRoad(Path(LineSegment(Point(800,800), Point(800,-800))));
-//  map->addRoad(Path(LineSegment(Point(800,-800), Point(-800,-800))));
-//  map->addRoad(Path(LineSegment(Point(-800,-800), Point(-800,800))));
-//  map->addRoad(Path(LineSegment(Point(-800,800), Point(800,800))));
-
-//    area->addVertex(Point(600,600));
-//    area->addVertex(Point(600,-600));
-//    area->addVertex(Point(-600,-600));
-//    area->addVertex(Point(-600,600));
-//
-//    map->addRoad(Path(LineSegment(Point(600,600), Point(600,-600))));
-//    map->addRoad(Path(LineSegment(Point(600,-600), Point(-600,-600))));
-//    map->addRoad(Path(LineSegment(Point(-600,-600), Point(-600,600))));
-//    map->addRoad(Path(LineSegment(Point(-600,600), Point(600,600))));
 
   OrganicRoadPattern* generator = new OrganicRoadPattern();
 
@@ -85,14 +37,13 @@ void OgreCity::createPrimaryRoadNetwork()
   generator->setRoadType(Road::PRIMARY_ROAD);
   //generator->setRoadLength(600, 800);
   //generator->setSnapDistance(200);
-  generator->setRoadLength(1200, 2000);
-  generator->setSnapDistance(800);
-  generator->setTurnAngle(60, 90);
+  generator->setRoadLength(900, 1200);
+  generator->setSnapDistance(400);
 
   generator->setInitialPosition(area->centroid());
-
   generator->generate();
 
+  /* This is important to avoid filament roads to go under buildings and such. */
   map->removeFilamentRoads();
 }
 
@@ -114,9 +65,8 @@ void OgreCity::createSecondaryRoadNetwork()
     generator->setRoadType(Road::SECONDARY_ROAD);
     generator->setInitialPosition((*zonesIterator)->areaConstraints().centroid());
     generator->setInitialDirection(Vector(0.2, 0.3));
-    generator->setRoadLength(200, 230);
-    generator->setSnapDistance(100);
-    generator->setTurnAngle(90, 90);
+    generator->setRoadLength(300, 330);
+    generator->setSnapDistance(150);
     generator->generate();
 
     delete generator;
@@ -140,13 +90,15 @@ void OgreCity::createBlocks()
           blocksIterator != blocks.end();
           blocksIterator++)
      {
-       (*blocksIterator)->createLots(150,150,0);
+       (*blocksIterator)->createLots(allotmentWidth,allotmentDepth,0);
      }
   }
 }
 
 void OgreCity::createBuildings()
-{}
+{
+
+}
 
 void OgreCity::render()
 {
@@ -174,7 +126,6 @@ void OgreCity::renderRoadNetwork()
 
 void OgreCity::renderBuildings()
 {
-  return;
   Point cityCenter = area->centroid();
   double distanceToCenter;
 
@@ -200,43 +151,107 @@ void OgreCity::renderBuildings()
         lotsIterator != lots.end();
         lotsIterator++, i++)
      {
+       debug("lot: " << i);
        OgreBuilding* building;
 
        /* Discard small lots. */
        if ((*lotsIterator)->areaConstraints().area() < 5000) continue;
 
-
-       debug("lot: " << i);
-       switch (generator.generateInteger(0,4))
-       {
-         case 0:
-           building = new SkyScraper(*lotsIterator, sceneManager, blockNode);
-           break;
-         case 1:
-         case 2:
-         case 3:
-         case 4:
-           building = new OlderBuilding(*lotsIterator, sceneManager, blockNode);
-           break;
-         default:
-           assert("Wrong building configuration");
-       }
-
        distanceToCenter = Vector(cityCenter, (*lotsIterator)->areaConstraints().vertex(0)).length();
-       if (distanceToCenter > 500)
+
+       /* City center, that means
+          sky scrapers, older tall buildings,
+          occasionaly some small historic building. */
+       if (distanceToCenter < 1500)
        {
-          building->setMaxHeight(generator.generateInteger(3, 7) * 2.5 * OgreCity::meter);
+         switch (generator.generateInteger(0,2))
+         {
+           case 0:
+             building = new SkyScraper(*lotsIterator, sceneManager, blockNode);
+
+             if (distanceToCenter < 500)
+             {
+               if (generator.generateBool(0.7))
+               {
+                 building->setMaxHeight(generator.generateInteger(20, 30) * 2.5 * OgreCity::meter);
+               }
+               else
+               {
+                 building->setMaxHeight(generator.generateInteger(10, 15) * 2.5 * OgreCity::meter);
+               }
+             }
+             else if (distanceToCenter < 1000)
+             {
+                building->setMaxHeight(generator.generateInteger(5, 20) * 2.5 * OgreCity::meter);
+             }
+             break;
+           case 1:
+             building = new RedBuilding(*lotsIterator, sceneManager, blockNode);
+
+             if (distanceToCenter < 500)
+             {
+               if (generator.generateBool(0.7))
+               {
+                 building->setMaxHeight(generator.generateInteger(15, 25) * 2.5 * OgreCity::meter);
+               }
+               else
+               {
+                 building->setMaxHeight(generator.generateInteger(7, 10) * 2.5 * OgreCity::meter);
+               }
+             }
+             else if (distanceToCenter < 1000)
+             {
+                building->setMaxHeight(generator.generateInteger(3, 15) * 2.5 * OgreCity::meter);
+             }
+             break;
+           case 2:
+             building = new OlderBuilding(*lotsIterator, sceneManager, blockNode);
+
+
+             if (distanceToCenter < 500)
+             {
+               if (generator.generateBool(0.7))
+               {
+                 building->setMaxHeight(generator.generateInteger(10, 15) * 2.5 * OgreCity::meter);
+               }
+               else
+               {
+                 building->setMaxHeight(generator.generateInteger(7, 10) * 2.5 * OgreCity::meter);
+               }
+             }
+             else if (distanceToCenter < 1000)
+             {
+                building->setMaxHeight(generator.generateInteger(3, 15) * 2.5 * OgreCity::meter);
+             }
+             break;
+           default:
+             assert("Wrong building configuration");
+         }
        }
        else
+       /* Peripheral and suburban areas.
+          Small residential houses. Familly houses. */
        {
-          building->setMaxHeight(generator.generateInteger(20, 30) * 2.5 * OgreCity::meter);
-       }
-       //building->setMaxHeight(50 * 2.5 * OgreCity::meter);
+         switch (generator.generateInteger(0,3))
+         {
+           case 0:
+             building = new RedBuilding(*lotsIterator, sceneManager, blockNode);
+             break;
+           case 1:
+           case 2:
+             building = new SuburbanHouse(*lotsIterator, sceneManager, blockNode);
+             break;
+           case 3:
+             building = new OlderBuilding(*lotsIterator, sceneManager, blockNode);
+             break;
+           default:
+             assert("Wrong building configuration");
+         }
 
-       if (generator.generateBool(0.8))
-       {
-         building->render();
+          building->setMaxHeight(generator.generateInteger(3, 7) * 2.5 * OgreCity::meter);
        }
+
+       building->render();
        delete building;
      }
    }
@@ -255,7 +270,7 @@ Ogre::Vector3 OgreCity::libcityToOgre(Vector const& vector)
 
 Vector OgreCity::ogreToLibcity(Ogre::Vector3 const& vector)
 {
-  return Vector(vector.x, vector.y, vector.z);
+  return Vector(vector.x, vector.z, vector.y);
 }
 
 void OgreCity::setTerrain(TerrainRenderer* renderer)

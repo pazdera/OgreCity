@@ -5,7 +5,7 @@
  * @date 11.04.2011
  * @author Radek Pazdera (xpazde00@stud.fit.vutbr.cz)
  *
- * @brief Implement abstract class City from libcity and build some city.
+ * @brief Implements abstract class City from libcity and build some city.
  *
  */
 
@@ -55,13 +55,25 @@ class OgreCity : public City, public Renderer
       */
     virtual void configuration()
     {
-      Random::setSeed(100);
+      Random::setSeed(1); //std::time(0)
+
+      /* Define city boundaries  >> */
+      area->addVertex(Point(2000,2000));
+      area->addVertex(Point(2000,-2000));
+      area->addVertex(Point(-2000,-2000));
+      area->addVertex(Point(-2000,2000));
+
+      map->addRoad(Path(LineSegment(Point(2000,2000), Point(2000,-2000))));
+      map->addRoad(Path(LineSegment(Point(2000,-2000), Point(-2000,-2000))));
+      map->addRoad(Path(LineSegment(Point(-2000,-2000), Point(-2000,2000))));
+      map->addRoad(Path(LineSegment(Point(-2000,2000), Point(2000,2000))));
+      /* << */
 
       /* Primary roads configuration */
       primaryRoad.height = 1;
-      primaryRoad.width = 4 * 3.3 * OgreCity::meter;
+      primaryRoad.width = 3 * 3.3 * OgreCity::meter;
 
-      primaryRoad.material = "Road";
+      primaryRoad.material = "Highway";
 
       // Texture mapping on vertices: 0, 0.03125, 0.5, 1-0.03125, 1
       primaryRoad.verticesTextureMapping.push_back(0);
@@ -79,20 +91,25 @@ class OgreCity : public City, public Renderer
 
       /* Secondary roads configuration */
       secondaryRoad.height = 1;
-      secondaryRoad.width = 2 * 2 * OgreCity::meter;
+      secondaryRoad.width = 3 * 2 * OgreCity::meter;
 
-      secondaryRoad.material = "Road";
+      secondaryRoad.material = "SecondaryRoad";
 
-      secondaryRoad.verticesTextureMapping = primaryRoad.verticesTextureMapping; // Same as primary road
+      /* Mapping and offsets are the same as for primaryRoad */
+      secondaryRoad.verticesTextureMapping = primaryRoad.verticesTextureMapping;
       secondaryRoad.verticesPositionOffset = primaryRoad.verticesPositionOffset;
-      
 
-      /* Building configuration */
+      /* How big will be the lots for houses */
+      allotmentWidth = 150;
+      allotmentDepth = 150;
     }
 
   private:
     Ogre::SceneManager* sceneManager;
     Ogre::Terrain* terrain;
+
+    double allotmentWidth;
+    double allotmentDepth;
 
     StreetGraphRenderer::RoadParameters primaryRoad, secondaryRoad;
 };

@@ -58,8 +58,175 @@ void StreetGraphRenderer::render()
   {
     road = *roadIterator;
 
-    drawRoad(road, getRoadParameters(road), terrain);
+    drawRoadSampled(road, getRoadParameters(road), terrain);
   }
+}
+
+void StreetGraphRenderer::drawRoadSampled(Road* road, RoadParameters parameters, Ogre::Terrain* terrain)
+{
+  /* works only with precomputed intersections */
+  Point* beginingVertices = intersectionVertices[road->begining()][road];
+  Point* endVertices = intersectionVertices[road->end()][road];
+
+  assert(beginingVertices != 0);
+  assert(endVertices != 0);
+
+  int numberOfHorizontalPoints = numberOfSampleVertices;
+  double textureSize = 40;
+
+  Polygon roadPolygon;
+  roadPolygon.addVertex(beginingVertices[0]);
+  roadPolygon.addVertex(endVertices[0]);
+  roadPolygon.addVertex(endVertices[numberOfHorizontalPoints - 1]);
+  roadPolygon.addVertex(beginingVertices[numberOfHorizontalPoints - 1]);
+
+  Vector roadDirection(road->begining()->position(), road->end()->position()),
+         roadNormal    = roadDirection.crossProduct(Vector(0,0,1));
+  Point center = roadPolygon.centroid();
+
+  Line topEdge(roadPolygon.vertex(0),roadPolygon.vertex(1));
+  Point topEdgeProjection;
+  double width = parameters.width;
+
+  roadDirection.normalize();
+  roadNormal.normalize();
+
+  Point last;
+  if ((roadPolygon.vertex(1) - center).length() >= (roadPolygon.vertex(2) - center).length())
+  {
+    last = roadPolygon.vertex(1);
+  }
+  else
+  {
+    last = roadPolygon.vertex(2);
+  }
+
+  Line split;
+  if ((roadPolygon.vertex(0) - center).length() >= (roadPolygon.vertex(3) - center).length())
+  {
+    split.set(roadPolygon.vertex(0), roadPolygon.vertex(0) + roadNormal);
+  }
+  else
+  {
+    split.set(roadPolygon.vertex(3), roadPolygon.vertex(3) + roadNormal);
+  }
+
+  /* Move split line to the first sample */
+  split.set(split.begining() + roadDirection*sampleSize, split.end() + roadDirection*sampleSize);
+
+
+  /* Generate unique alias for naming Ogre entities */
+  static int roadNumber = 0;
+  Ogre::String roadName;
+  Ogre::StringStream convertor;
+  convertor << roadNumber;
+  roadName = convertor.str();
+  roadNumber++;
+
+  Ogre::ManualObject roadObject(roadName + "obj");
+
+  std::list<Polygon*> samples;
+  Polygon* leftOver = new Polygon(roadPolygon);
+  Polygon* sample;
+
+  int meshVertices = 0;
+  roadObject.begin(parameters.material);
+
+  int steps = 0;
+  while (leftOver != 0)
+  {
+    steps++;
+    samples = leftOver->split(split);
+    split.set(split.begining() + roadDirection*sampleSize, split.end() + roadDirection*sampleSize);
+
+    if (samples.size() > 1)
+    {
+      delete leftOver;
+
+      if ((last - samples.front()->centroid()).length() >= (last - samples.back()->centroid()).length())
+      {
+        sample = samples.front();
+        leftOver = samples.back();
+      }
+      else
+      {
+        leftOver = samples.front();
+        sample = samples.back();
+      }
+    }
+    else if (samples.size() == 1)
+    {
+      sample = leftOver;
+      leftOver = 0;
+    }
+    else
+    {
+      assert("Error");
+    }
+
+
+    double distanceFromBegining;
+    double texturePosition;
+    int sampleVertices = sample->numberOfVertices();
+
+    Ogre::Vector3 vertex;
+    for (unsigned int number = 0; number < sampleVertices; number++)
+    {
+      distanceFromBegining = (topEdge.nearestPoint(sample->vertex(number)) - topEdge.begining()).length();
+      texturePosition = std::fmod(distanceFromBegining, textureSize) / textureSize;
+
+      vertex = OgreCity::libcityToOgre(sample->vertex(number));
+      vertex.y = terrain->getHeightAtWorldPosition(vertex.x, 0, vertex.z) + parameters.height;
+
+      roadObject.position(vertex);
+      roadObject.textureCoord(topEdge.distance(sample->vertex(number))/(2*width), texturePosition);
+    }
+
+    if (sampleVertices == 4)
+    {
+      roadObject.quad(meshVertices+0, meshVertices+3, meshVertices+2, meshVertices+1);
+    }
+    else
+    {
+      std::vector<int> triangles = sample->getSurfaceIndexes();
+      assert(triangles.size() % 3 == 0);
+      int numberOfTriangles = triangles.size() / 3;
+
+      for (int i = 0; i < numberOfTriangles; i++)
+      {
+        //roadObject.triangle(triangles[3*i+0], triangles[3*i+1], triangles[3*i+2]);
+        roadObject.triangle(meshVertices+triangles[3*i+2], meshVertices+triangles[3*i+1], meshVertices+triangles[3*i+0]);
+      }
+    }
+
+    meshVertices += sampleVertices;
+  }
+  roadObject.end();
+
+  Ogre::Entity* roadEntity;
+  Ogre::SceneNode* roadSceneNode;
+  try
+  {
+    roadSceneNode = sceneManager->getSceneNode("RoadNode");
+  }
+  catch(Ogre::Exception e)
+  {
+    roadSceneNode = sceneManager->getRootSceneNode()->createChildSceneNode("RoadNode");
+  }
+
+  roadObject.convertToMesh(roadName + "Mesh");
+
+  // add mesh to scene
+  roadEntity = sceneManager->createEntity(roadName + "Ent", roadName + "Mesh");
+  roadEntity->setCastShadows(false);
+
+  Ogre::StaticGeometry* staticObject = sceneManager->createStaticGeometry(roadName+"Static");
+  staticObject->addEntity(roadEntity, Ogre::Vector3(0,0,0));
+  staticObject->setCastShadows(false);
+  staticObject->build();
+
+  //roadSceneNode = roadSceneNode->createChildSceneNode();
+  //roadSceneNode->attachObject(roadEntity);
 }
 
 void StreetGraphRenderer::drawRoad(Road* road, RoadParameters parameters, Ogre::Terrain* terrain)
@@ -684,10 +851,10 @@ void StreetGraphRenderer::precomputeIntersectionsVertices()
           Ogre::String uniqueName = "Intersection" + getUniqueObjectNumber();
           Ogre::Vector3 corner;
           Ogre::ManualObject intersectionObject(uniqueName);
-          intersectionObject.begin("Road3WayIntersection", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+          intersectionObject.begin("Intersection", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
           corner = mapPointToTerrain(intersectionVertices[intersection][roadsOfCurrentIntersection[1]][getVertexIndex(0, indexesInverted[1])]);
-          corner.y -= 1;
+          //corner.y -= 1;
           intersectionObject.position(corner);
           intersectionObject.textureCoord(0,0);
           intersectionObject.position(mapPointToTerrain(intersectionVertices[intersection][roadsOfCurrentIntersection[1]][getVertexIndex(1, indexesInverted[1])]));
@@ -698,7 +865,7 @@ void StreetGraphRenderer::precomputeIntersectionsVertices()
           intersectionObject.textureCoord(0,1-0.03125);
 
           corner = mapPointToTerrain(intersectionVertices[intersection][roadsOfCurrentIntersection[1]][getVertexIndex(4, indexesInverted[1])]);
-          corner.y -= 1;
+          //corner.y -= 1;
           intersectionObject.position(corner);
           intersectionObject.textureCoord(0,1);
 
@@ -722,12 +889,12 @@ void StreetGraphRenderer::precomputeIntersectionsVertices()
           intersectionObject.textureCoord(1-0.03125,1);
 
           corner = mapPointToTerrain(intersectionVertices[intersection][roadsOfCurrentIntersection[2]][getVertexIndex(0, indexesInverted[2])]);
-          corner.y -= 1;
+          //corner.y -= 1;
           intersectionObject.position(corner);
           intersectionObject.textureCoord(1,0);
 
           corner = mapPointToTerrain(intersectionVertices[intersection][roadsOfCurrentIntersection[0]][getVertexIndex(4, indexesInverted[0])]);
-          corner.y -= 1;
+          //corner.y -= 1;
           intersectionObject.position(corner);
           intersectionObject.position(mapPointToTerrain(intersectionVertices[intersection][roadsOfCurrentIntersection[0]][getVertexIndex(4, indexesInverted[0])]));
           intersectionObject.textureCoord(1,1);
@@ -937,10 +1104,10 @@ void StreetGraphRenderer::precomputeIntersectionsVertices()
           Ogre::String uniqueName = "Intersection" + getUniqueObjectNumber();
           Ogre::Vector3 corner;
           Ogre::ManualObject intersectionObject(uniqueName);
-          intersectionObject.begin("Road4WayIntersection", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+          intersectionObject.begin("Intersection", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
           corner = mapPointToTerrain(intersectionVertices[intersection][roadsOfCurrentIntersection[1]][getVertexIndex(0, indexesInverted[1])]);
-          corner.y -= 1;
+          //corner.y -= 1;
 
           intersectionObject.position(corner);
           intersectionObject.textureCoord(0,0);
@@ -952,7 +1119,7 @@ void StreetGraphRenderer::precomputeIntersectionsVertices()
           intersectionObject.textureCoord(0,1-0.03125);
 
           corner = mapPointToTerrain(intersectionVertices[intersection][roadsOfCurrentIntersection[1]][getVertexIndex(4, indexesInverted[1])]);
-          corner.y -= 1;
+          //corner.y -= 1;
           intersectionObject.position(corner);
           intersectionObject.textureCoord(0,1);
 
@@ -973,7 +1140,7 @@ void StreetGraphRenderer::precomputeIntersectionsVertices()
           intersectionObject.textureCoord(1-0.03125,1);
 
           corner = mapPointToTerrain(intersectionVertices[intersection][roadsOfCurrentIntersection[3]][getVertexIndex(4, indexesInverted[3])]);
-          corner.y -= 1;
+          //corner.y -= 1;
           intersectionObject.position(corner);
           intersectionObject.textureCoord(1,0);
           intersectionObject.position(mapPointToTerrain(intersectionVertices[intersection][roadsOfCurrentIntersection[3]][getVertexIndex(3, indexesInverted[3])]));
@@ -984,7 +1151,7 @@ void StreetGraphRenderer::precomputeIntersectionsVertices()
           intersectionObject.textureCoord(1,1-0.03125);
 
           corner = mapPointToTerrain(intersectionVertices[intersection][roadsOfCurrentIntersection[3]][getVertexIndex(0, indexesInverted[3])]);
-          corner.y -= 1;
+          //corner.y -= 1;
           intersectionObject.position(corner);
           intersectionObject.textureCoord(1,1);
 
@@ -1025,6 +1192,177 @@ void StreetGraphRenderer::precomputeIntersectionsVertices()
         };
         break;
       default: // Less than one or more than four roads is wrong
+        {
+          debug("5-or-more-way intersection " << intersection->position().toString());
+          sortIntersectingRoadsCounterclockwise(intersection, &roadsOfCurrentIntersection);
+
+          const int NUMBER_OF_WAYS = roadsOfCurrentIntersection.size();
+          Vector normals[NUMBER_OF_WAYS];
+          Ray  baseRoadRays[NUMBER_OF_WAYS];
+
+          std::vector<Line> projectedVertexRays[NUMBER_OF_WAYS];
+          int indexesInverted[NUMBER_OF_WAYS];
+
+          /* Load and prepare information about all roads of the intersection. */
+          for(int way = 0; way < NUMBER_OF_WAYS; way++)
+          {
+            Point roadBegining = roadsOfCurrentIntersection[way]->begining()->position(),
+                  roadEnd = roadsOfCurrentIntersection[way]->end()->position();
+
+            /* It's importat that the vector is same as when the road is being rendered.
+               Roads are rendered from begining to end. */
+            Vector roadDirectionVector = Vector(roadBegining, roadEnd);
+
+            /* Cross product of y and z axis will yield normal vector. */
+            normals[way] = roadDirectionVector.crossProduct(Vector(0,0,1));
+            normals[way].normalize();
+
+            /* Ray, that is in the centre of the road. */
+            baseRoadRays[way] = getExtensionRay(intersection, roadsOfCurrentIntersection[way]);
+
+            /* Project the ray for each horizontal vertex of the road. */
+            indexesInverted[way] = false;
+            int index = 0;
+            for (int vertexIndex = 0; vertexIndex < numberOfSampleVertices; vertexIndex++)
+            {
+              /* Very important step here is to invert the horizontal vertices if
+               the road starts in the intersection. We need to know wheter the
+               road was flipped so we can flip it back when it comes to storing
+               the vertices back.*/
+              if (intersection == roadsOfCurrentIntersection[way]->begining())
+              {
+                index = numberOfSampleVertices - 1 - vertexIndex;
+                indexesInverted[way] = true;
+              }
+              else /* if (intersection == roadsOfCurrentIntersection[way]->end()) */
+              {
+                index = vertexIndex;
+              }
+
+              /* Direction vector is always the same, but the origin changes. */
+              Vector originOffset(normals[way] * getRoadParameters(roadsOfCurrentIntersection[way]).verticesPositionOffset[index] *
+                                                 getRoadParameters(roadsOfCurrentIntersection[way]).width);
+              Point newOrigin = baseRoadRays[way].origin() + originOffset;
+
+              /* Line was used instead of ray, due to some pretty nasty bugs,
+               but the use is the same. */
+              Line projectedRay(newOrigin, baseRoadRays[way].direction());
+              projectedVertexRays[way].push_back(projectedRay);
+            }
+          }
+
+          /* References for each road's vertex lines. This is
+           here just to improve readability of the code below. */
+          std::vector<Line>& first  = projectedVertexRays[0];
+          std::vector<Line>& second = projectedVertexRays[1];
+          std::vector<Line>& third  = projectedVertexRays[2];
+          std::vector<Line>& fourth = projectedVertexRays[3];
+
+          /* The four point that form the shape of the intersection. */
+          Point topLeft, topRight,
+                bottomLeft, bottomRight;
+
+          Point whiteLineCrossTopLeft, whiteLineCrossTopRight,
+                whiteLineCrossBottomLeft, whiteLineCrossBottomRight;
+
+          /* For storing results of various intersection tests for
+           assertions. This isn't really neccessary, but it helps debugging. */
+          Line::Intersection intersectionResult;
+          Point controlPoint;
+          std::vector<Point> rayIntersections;
+
+          int current, next;
+          for (int i = 0; i < NUMBER_OF_WAYS; i++)
+          {
+            current = i;
+            next = (i+1) % NUMBER_OF_WAYS;
+            intersectionResult = projectedVertexRays[current][0].intersection2D(projectedVertexRays[next][numberOfSampleVertices - 1], &controlPoint);
+            if (intersectionResult == Line::PARALLEL)
+            {
+              controlPoint = projectedVertexRays[current][0].nearestPoint(intersection->position());
+            }
+
+            assert(intersectionResult != Line::NONINTERSECTING);
+            rayIntersections.push_back(controlPoint);
+          }
+
+          Line constraints[NUMBER_OF_WAYS];
+          /* Now we have the rays we want cut our roads with. */
+          for (int i = 0; i < NUMBER_OF_WAYS; i++)
+          {
+            current = (NUMBER_OF_WAYS - 1 + i) % NUMBER_OF_WAYS;
+            next = (current + 1) % NUMBER_OF_WAYS;
+            constraints[i].set(rayIntersections[current], rayIntersections[next]);
+          }
+
+          Point raysIntersection;
+          /* Test each road's projectedLines against coresponding constraint
+           line and save the intersection vertices. */
+          for(int way = 0; way < NUMBER_OF_WAYS; way++)
+          {
+            intersectionVertices[intersection][roadsOfCurrentIntersection[way]] = new Point[numberOfSampleVertices+1];
+
+            for (int vertexIndex = 0; vertexIndex < numberOfSampleVertices; vertexIndex++)
+            {
+              int index = indexesInverted[way] ? numberOfSampleVertices - 1 - vertexIndex : vertexIndex;
+
+              intersectionResult = projectedVertexRays[way][vertexIndex].intersection2D(constraints[way], &raysIntersection);
+              intersectionVertices[intersection][roadsOfCurrentIntersection[way]][index] = raysIntersection;
+              assert(intersectionResult == Line::INTERSECTING);
+            }
+
+            /* Modify road begining so it doesn't go all the way into
+             the intersection and makes space for the computed border vertices. */
+            Point modifiedBegining = getBeginingThatAvoidsOverlap(intersection, roadsOfCurrentIntersection[way], getRoadParameters(roadsOfCurrentIntersection[way]));
+            intersectionVertices[intersection][roadsOfCurrentIntersection[way]][numberOfSampleVertices] = modifiedBegining;
+          }
+
+
+          /* Create intersection mesh. */
+          Ogre::String uniqueName = "Intersection" + getUniqueObjectNumber();
+          Ogre::Vector3 corner;
+          Ogre::ManualObject intersectionObject(uniqueName);
+          intersectionObject.begin("Intersection", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+
+          Polygon intersectionPolygon;
+          for (int i = 0; i < rayIntersections.size(); i++)
+          {
+            intersectionPolygon.addVertex(rayIntersections[i]);
+            intersectionObject.position(mapPointToTerrain(rayIntersections[i]));
+            intersectionObject.textureCoord(0,0);
+          }
+
+          std::vector<int> triagnles = intersectionPolygon.getSurfaceIndexes();
+          assert(triagnles.size() % 3 == 0);
+          int numberOfTriangles = triagnles.size() / 3;
+
+          for (int i = 0; i < numberOfTriangles; i++)
+          {
+              intersectionObject.triangle(triagnles[3*i+2], triagnles[3*i+1], triagnles[3*i+0]);
+              //intersectionObject.triangle(triagnles[3*i+0], triagnles[3*i+1], triagnles[3*i+2]);
+          }
+
+          intersectionObject.end();
+
+          intersectionObject.convertToMesh(uniqueName + "Mesh");
+
+          Ogre::SceneNode* roadSceneNode;
+          // Gets the Road node if it's already there.
+          try
+          {
+            roadSceneNode = sceneManager->getSceneNode("RoadNode");
+          }
+          catch(Ogre::Exception e)
+          {
+            roadSceneNode = sceneManager->getRootSceneNode()->createChildSceneNode("RoadNode");
+          }
+
+          Ogre::Entity* intersectionEntity;
+          intersectionEntity = sceneManager->createEntity(uniqueName + "Entity", uniqueName + "Mesh");
+          intersectionEntity->setCastShadows(false);
+          roadSceneNode = roadSceneNode->createChildSceneNode();
+          roadSceneNode->attachObject(intersectionEntity);
+        };
         // FIXME turn on assert
         //assert(false);
         break;

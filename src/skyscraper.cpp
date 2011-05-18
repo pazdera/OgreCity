@@ -32,11 +32,13 @@ void SkyScraper::initialize()
 
 void SkyScraper::configure()
 {
-  setAxiom("{BFER}");
+  addToAlphabet("C");
+
+  setAxiom("{BSFER}");
 
   addRule('E', "FE");   // Next normal floor
   addRule('E', "SFE");  // Ledge, then floor
-  addRule('E', "R-FE"); // Setbacks
+  addRule('E', "GCFE"); // Setbacks
 
   setInitialDirection(Vector(0,0,1));
 
@@ -49,50 +51,45 @@ void SkyScraper::configure()
 void SkyScraper::setupTextures()
 {
   Random generator;
-  switch (generator.generateInteger(0,3))
+  switch (generator.generateInteger(0,2))
   {
     case 0:
-      windowTileMaterial = "BrickWindow";
-      basementMaterial   = "HotelWindow";
-      spacerMaterial     = "BrickLedge";
-      rooftopMaterial    = "RoofTop";
+      windowTileMaterial = "HotelWindow";
+      basementMaterial   = "StreetLevel2";
+      spacerMaterial     = "HotelLedge";
+      ledgeMaterial      = "HotelLedge";
+      rooftopMaterial    = "DirtyRooftop1";
 
       storeyHeight = 2.5 * OgreCity::meter;
-      basementHeight = 3 * OgreCity::meter;
+      basementHeight = 4 * OgreCity::meter;
       spacerHeight = 1 * OgreCity::meter;
+      ledgeHeight = 1 * OgreCity::meter;
       tileWidth = 10 * OgreCity::meter;
       break;
     case 1:
-      windowTileMaterial = "HotelWindow";
-      basementMaterial   = "HotelWindow";
-      spacerMaterial     = "HotelLedge";
-      rooftopMaterial    = "RoofTop";
+      windowTileMaterial = "OfficeBuildingWindow";
+      basementMaterial   = "StreetLevel7";
+      spacerMaterial     = "OfficeBuildingLedge";
+      ledgeMaterial      = "OfficeBuildingLedge";
+      rooftopMaterial    = "DirtyRooftop1";
 
       storeyHeight = 2.5 * OgreCity::meter;
-      basementHeight = 3 * OgreCity::meter;
+      basementHeight = 4 * OgreCity::meter;
       spacerHeight = 1 * OgreCity::meter;
+      ledgeHeight = 1 * OgreCity::meter;
       tileWidth = 10 * OgreCity::meter;
       break;
     case 2:
-      windowTileMaterial = "OfficeBuildingWindow";
-      basementMaterial   = "HotelWindow";
-      spacerMaterial     = "HotelLedge";
-      rooftopMaterial    = "RoofTop";
+      windowTileMaterial = "GlassTowerWindow";
+      basementMaterial   = "StreetLevel7";
+      spacerMaterial     = "GlassTowerLedge";
+      ledgeMaterial      = "GlassTowerLedge";
+      rooftopMaterial    = "SkyScraperRooftop";
 
       storeyHeight = 2.5 * OgreCity::meter;
-      basementHeight = 3 * OgreCity::meter;
+      basementHeight = 4 * OgreCity::meter;
       spacerHeight = 1 * OgreCity::meter;
-      tileWidth = 10 * OgreCity::meter;
-      break;
-    case 3:
-      windowTileMaterial = "HistoricWindow";
-      basementMaterial   = "HotelWindow";
-      spacerMaterial     = "HotelLedge";
-      rooftopMaterial    = "RoofTop";
-
-      storeyHeight = 5 * OgreCity::meter;
-      basementHeight = 3 * OgreCity::meter;
-      spacerHeight = 1 * OgreCity::meter;
+      ledgeHeight = 1 * OgreCity::meter;
       tileWidth = 10 * OgreCity::meter;
       break;
     default:
@@ -100,10 +97,21 @@ void SkyScraper::setupTextures()
   }
 }
 
+void SkyScraper::setback()
+{
+  if (cursor.getPosition().z() >= 0.6*maxHeight())
+  {
+    substractBoundingBox(5);
+  }
+}
+
 void SkyScraper::interpretSymbol(char symbol)
 {
   switch (symbol)
   {
+    case 'C': /* Setback */
+      setback();
+      break;
     default:
       /* Try to interpret symbols defined in parent. */
       OgreBuilding::interpretSymbol(symbol);
