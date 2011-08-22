@@ -58,15 +58,15 @@ class OgreCity : public City, public Renderer
       Random::setSeed(1); //std::time(0)
 
       /* Define city boundaries  >> */
-      area->addVertex(Point(2000,2000));
-      area->addVertex(Point(2000,-2000));
-      area->addVertex(Point(-2000,-2000));
-      area->addVertex(Point(-2000,2000));
+      area->addVertex(Point(500,500));
+      area->addVertex(Point(500,-500));
+      area->addVertex(Point(-500,-500));
+      area->addVertex(Point(-500,500));
 
-      map->addRoad(Path(LineSegment(Point(2000,2000), Point(2000,-2000))));
-      map->addRoad(Path(LineSegment(Point(2000,-2000), Point(-2000,-2000))));
-      map->addRoad(Path(LineSegment(Point(-2000,-2000), Point(-2000,2000))));
-      map->addRoad(Path(LineSegment(Point(-2000,2000), Point(2000,2000))));
+      map->addRoad(Path(LineSegment(Point(500,500), Point(500,-500))));
+      map->addRoad(Path(LineSegment(Point(500,-500), Point(-500,-500))));
+      map->addRoad(Path(LineSegment(Point(-500,-500), Point(-500,500))));
+      map->addRoad(Path(LineSegment(Point(-500,500), Point(500,500))));
       /* << */
 
       /* Primary roads configuration */
@@ -112,6 +112,9 @@ class OgreCity : public City, public Renderer
     double allotmentDepth;
 
     StreetGraphRenderer::RoadParameters primaryRoad, secondaryRoad;
+
+    void printConsoleMessage(Ogre::String message);
+    Ogre::String convertToString(int number);
 };
 
 #endif // _OGRECITY_H_

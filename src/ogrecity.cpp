@@ -9,6 +9,8 @@
  *
  */
 
+#include <iostream>
+
 #include "ogrecity.h"
 #include "terrainrenderer.h"
 #include "streetgraphrenderer.h"
@@ -29,6 +31,7 @@ OgreCity::~OgreCity()
 
 void OgreCity::createPrimaryRoadNetwork()
 {
+  printConsoleMessage("STAGE 1: Generating primary road network ...");
 
   OrganicRoadPattern* generator = new OrganicRoadPattern();
 
@@ -49,11 +52,15 @@ void OgreCity::createPrimaryRoadNetwork()
 
 void OgreCity::createZones()
 {
+  printConsoleMessage("STAGE 2: Creating city zones ...");
+
   *zones = map->findZones();
 }
 
 void OgreCity::createSecondaryRoadNetwork()
 {
+  printConsoleMessage("STAGE 3: Generating secondary road network ...");
+
   for (std::list<Zone*>::iterator zonesIterator = zones->begin();
        zonesIterator != zones->end();
        zonesIterator++)
@@ -72,37 +79,54 @@ void OgreCity::createSecondaryRoadNetwork()
     delete generator;
   }
   map->removeFilamentRoads();
+
+  printConsoleMessage("         Total of " + convertToString(map->getRoads().size()) + " road segments.");
 }
 
 void OgreCity::createBlocks()
 {
+  printConsoleMessage("STAGE 4: Creating blocks and allotments ...");
+
   std::map<Road::Type, double> roadWidths;
   roadWidths[Road::PRIMARY_ROAD] = primaryRoad.width;
   roadWidths[Road::SECONDARY_ROAD] = secondaryRoad.width;
 
+  int numberOfAllotments = 0, numberOfBlocks = 0;
   for (std::list<Zone*>::iterator zone = zones->begin();
        zone != zones->end();
        zone++)
   {
     (*zone)->createBlocks(roadWidths);
      std::list<Block*> blocks = (*zone)->getBlocks();
+     numberOfBlocks += blocks.size();
      for (std::list<Block*>::iterator blocksIterator = blocks.begin();
           blocksIterator != blocks.end();
           blocksIterator++)
      {
        (*blocksIterator)->createLots(allotmentWidth,allotmentDepth,0);
+       numberOfAllotments += (*blocksIterator)->getLots().size();
      }
   }
+
+  printConsoleMessage("         " + convertToString(zones->size()) + " zones.");
+  printConsoleMessage("         " + convertToString(numberOfBlocks) + " blocks.");
+  printConsoleMessage("         " + convertToString(numberOfAllotments) + " allotments.");
 }
 
 void OgreCity::createBuildings()
 {
+  printConsoleMessage("STAGE 5: Generating buildings ...");
 
+  /* Optimized into renderBuildings() so we dont need to go
+     through the list again. */
 }
 
 void OgreCity::render()
 {
+  printConsoleMessage("Generating city ...");
   generate();
+
+  printConsoleMessage("Rendering city ...");
 
   renderRoadNetwork();
   renderBuildings();
@@ -151,7 +175,8 @@ void OgreCity::renderBuildings()
         lotsIterator != lots.end();
         lotsIterator++, i++)
      {
-       debug("lot: " << i);
+       printConsoleMessage("Building " + convertToString(i));
+
        OgreBuilding* building;
 
        /* Discard small lots. */
@@ -256,6 +281,8 @@ void OgreCity::renderBuildings()
      }
    }
   }
+
+  printConsoleMessage("Total of " + convertToString(i) + " buildings rendered.");
 }
 
 Ogre::Vector3 OgreCity::libcityToOgre(Point const& point)
@@ -276,4 +303,17 @@ Vector OgreCity::ogreToLibcity(Ogre::Vector3 const& vector)
 void OgreCity::setTerrain(TerrainRenderer* renderer)
 {
   terrain = renderer->getTerrainObject();
+}
+
+void OgreCity::printConsoleMessage(Ogre::String message)
+{
+  std::cout << message << std::endl;
+}
+
+Ogre::String OgreCity::convertToString(int number)
+{
+  Ogre::StringStream convertor;
+
+  convertor << number;
+  return convertor.str();
 }
